@@ -26,9 +26,37 @@ int main() {
 	 p[i+1] = sum;
       }
       
-      int minval = sum;
-      int ii(0);
-      int jj(n);
+      int minvalabs = p[1];
+      int minval = std::abs(minvalabs-k);
+      int ii(1);
+      int jj(1);
+      
+      int i(1);
+      int j(1);
+      while(i<=n) {
+	 int valabs = p[j]-p[i-1];
+         int val = std::abs(valabs-k);
+	 if(minval > val) {
+	    ii = i; jj = j;
+	    minval = val;
+	    minvalabs = valabs;
+	 }
+	 if(valabs < k) {
+	    j++;
+	    if(j>n) {
+	       i = n+1;
+	       break;
+	    }
+	 } else if(valabs > k) {
+	    i++;
+	 } else {
+            i = n+1;
+	    break;
+	 }
+      }
+      std::cout << ii-1 << " " << jj-1 << std::endl;
+
+      
       /*
       for(int i = 0; i<n; i++) {
          for(int j = i; j<n; j++) {
@@ -46,7 +74,7 @@ int main() {
       */
       
       
-
+      /*
       for(int i=0; i<n; i++) {
          int toFind = p[i]+k;
          int l(i+1);
@@ -95,5 +123,6 @@ int main() {
 	 }
       }
       std::cout << ii << " " << jj-1 << std::endl;
+      */
    }
 }
