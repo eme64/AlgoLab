@@ -1,4 +1,3 @@
-// colclusion: not space for n2 entries in memory!
 #include <iostream>
 #include <vector>
 #include <functional>
@@ -13,23 +12,18 @@ int main() {
    int t(0);
    std::cin >> t;
 
-   std::vector<std::vector<std::vector<Entry>>> table;
-   
    for(int tt=0;tt<t;tt++) {
       int n(0), m(0), r(0), b(0);
       std::cin >> n >> m >> r >> b;
       std::vector<std::vector<int>> transition;
       transition.resize(n);
-      for(int i=0;i<n;i++) {
-         transition[i].reserve(n);
-      }
       for(int mm=0; mm<m; mm++) {
          int u(0),v(0);
 	 std::cin >> u >> v;
          transition[u-1].push_back(v-1);
       }
       
-      /*
+      std::vector<std::vector<std::vector<Entry>>> table;
       table.resize(4);
       
       for(int s=0; s<4; s++) {
@@ -42,9 +36,7 @@ int main() {
 	    table[s][n-1][i] = Entry::H;
 	 }
       }
-      */
       
-      /*
       std::function<Entry(int,int,int)> f;
       f = [&table,&transition,&f](int s,int i,int j)->Entry{
          if(table[s][i][j]==Entry::empty) {
@@ -76,7 +68,5 @@ int main() {
       };
       
       std::cout << f(0,r-1,b-1) << std::endl;
-      */
-      std::cout << 0 << std::endl;
    }
 }
