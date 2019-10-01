@@ -22,17 +22,26 @@ int main() {
          std::cin >> x[i];
       }
       
-      if(n<=k) {
+     
+      int beforeTurns(k);
+      int numTurns(0);
+      int afterTurns(n-k);
+      while(afterTurns>=m) {
+         numTurns++;
+         afterTurns-=m;
+      }
+      if(afterTurns>0) {
+         numTurns++;
+         afterTurns--;
+      } else {
+         afterTurns+=m-1;
+      }
+
+      if(numTurns==0) {
          std::cout << 0 << std::endl;
 	 continue;
       }
-      // assume n > k
-      
-      int beforeTurns(k);
-      int numTurns((n-k)/m);
-      int afterTurns(n-k-m*numTurns);
-      if(numTurns>0) {afterTurns-=m-1;}
-
+ 
       // calculate base (last turn):
       std::vector<int> table;
       table.resize(n);
@@ -40,25 +49,29 @@ int main() {
       for(int i=0; i<n-afterTurns; i++) {
          table[i] = std::max(x[i], x[i+afterTurns]);
 	 turnMin = std::min(turnMin, table[i]);
+	 //std::cout << 0 << " " << i << " " << table[i] << std::endl;
       }
 
       // for each turn:
       for(int turn=1; turn<numTurns; turn++) {
-	 std::cout << turn << " " << turnMin << std::endl;
          turnMin = INT_MAX;
-	 for(int i=0; i<n-m+1; i++) {
+	 int turnGap(afterTurns+turn*m);
+         for(int i=0; i<n-afterTurns-turn*m; i++) {
 	    // calculate min of middle section:
 	    int midMin = INT_MAX;
-	    for(int j=1; j<m-1; j++) {
+	    for(int j=1; j<m; j++) {
 	       midMin = std::min(midMin, table[i+j]);
 	    }
-	    table[i] = std::max( x[i] + std::min(midMin, table[i+m-1]) ,
-			         std::min( table[i] , midMin) + x[i+m-1]);
+	    table[i] = std::max( x[i] + std::min(midMin, table[i+m]) ,
+			         std::min( table[i] , midMin) + x[i+turnGap]);
 	    turnMin = std::min(turnMin, table[i]);
+	    //std::cout << turn << " " << i << " " << table[i] << std::endl;
 	 }
       }
 
       std::cout << turnMin << std::endl;
-      std::cout << beforeTurns << " " << numTurns << " " << afterTurns << std::endl;
+      //std::cout << "+ " << turnMin << std::endl;
+      //std::cout << "- " << n << " " << m << " " << k << std::endl;
+      //std::cout << "- " << beforeTurns << " " << numTurns << " " << afterTurns << std::endl;
    }
 }
