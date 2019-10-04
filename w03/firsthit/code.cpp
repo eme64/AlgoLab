@@ -1,11 +1,17 @@
 #include <iostream>
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 
 typedef CGAL::Exact_predicates_exact_constructions_kernel K;
+typedef CGAL::Exact_predicates_inexact_constructions_kernel IK;
 
 typedef K::Point_2 P;
 typedef K::Segment_2 S;
 typedef K::Ray_2 R;
+
+typedef IK::Point_2 IP;
+typedef IK::Segment_2 IS;
+typedef IK::Ray_2 IR;
 
 long makeFloor(K::FT v) {
    double f = CGAL::to_double(v);
@@ -30,6 +36,7 @@ int main() {
       std::cin >> x >> y >> a >> b;
       
       R ray = R(P(x,y),P(a,b));
+      IR iray = IR(IP(x,y),IP(a,b));
       
       bool doIntersect(false);
       P intersection;
@@ -38,8 +45,9 @@ int main() {
       for(int i=0; i<n; i++) {
          long r(0),s(0),t(1),u(1);
 	 std::cin >> r >> s >> t >> u;
-	 S seg = S(P(r,s),P(t,u));
-	 if(CGAL::do_intersect(ray,seg)) {
+	 IS iseg = IS(IP(r,s),IP(t,u));
+	 if(CGAL::do_intersect(iray,iseg)) {
+	    S seg = S(P(r,s),P(t,u));
             auto ii(CGAL::intersection(ray,seg));
 	    if(const P* pp = boost::get<P>(&*ii)) {
 	       K::FT d2s = CGAL::squared_distance(P(x,y),*pp);
