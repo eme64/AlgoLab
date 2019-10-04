@@ -7,6 +7,17 @@ typedef K::Point_2 P;
 typedef K::Segment_2 S;
 typedef K::Ray_2 R;
 
+long makeFloor(K::FT v) {
+   double f = CGAL::to_double(v);
+   long res = (long)std::floor(f);
+   while(K::FT(res)>v) {res--;}
+   while(K::FT(res+1)<v) {res++;}
+   if(K::FT(res)>v or K::FT(res+1)<v) {
+      throw std::runtime_error("rounding error");
+   }
+   return res;
+}
+
 int main() {
    std::ios_base::sync_with_stdio(false);
 
@@ -48,16 +59,22 @@ int main() {
 	          d2 = d2dst;
 		  intersection = ss->target();
 	       }
+	    } else {
+	       throw std::runtime_error("strange segment intersection");
 	    }
             
             doIntersect = true;
 	 }
       }
-
       if(doIntersect) {
-	 std::cout << (long)std::floor(CGAL::to_double(intersection.x()))
-		   << " "
-		   << (long)std::floor(CGAL::to_double(intersection.y())) << std::endl;
+	 long outX = makeFloor(intersection.x());
+	 long outY = makeFloor(intersection.y());
+         
+         if(K::FT(outX)>intersection.x() or K::FT(outX+1)<intersection.x()) {
+	    if(intersection.x() > 0) throw std::runtime_error("rounding error");
+	 }
+
+	 std::cout << outX << " " << outY << std::endl;
       } else {
          std::cout << "no" << std::endl;
       }
