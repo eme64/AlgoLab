@@ -17,7 +17,7 @@ int main() {
       // j = dist to next taken one
       // j=0 take i, children don't matter: 0/1/2
       // j=1 don't take i, take 0/1 from children, one must be 0
-      // j=2 don't take i, take 0/1 from children only
+      // j=2 don't take i, take 0/1 from children only -> only relevant if its parent is taken
       
       std::vector<std::vector<int>> stages(n);
       
@@ -46,11 +46,11 @@ int main() {
          if(stages[i].size()==0) {
             table[i*3 + 0] = cost[i];
             table[i*3 + 1] = INT_MAX; // invalid
-            table[i*3 + 2] = 0; // invalid
+            table[i*3 + 2] = 0; // don't take me, but take my parent
          } else {
-            int sumMin012(0);
-            int sumMin01(0);
-            int min01Diff(INT_MAX);
+            int sumMin012(0);// calculate minimum over 0,1,2
+            int sumMin01(0);// min over 0,1
+            int min01Diff(INT_MAX);// calculate extra cost for having one at least 0 (instead of 1)
             
             for(auto j : stages[i]) {
                int min01(0);
@@ -59,7 +59,7 @@ int main() {
                   min01Diff = std::min( min01Diff , table[j*3 + 0] - table[j*3 + 1]);
                } else {
                   min01 = table[j*3 + 0];
-                  min01Diff = 0; // not taking it is better
+                  min01Diff = 0; // not taking it is better -> having at least one 0 is for free
                }
                int min012(std::min( min01 , table[j*3 + 2] ));
                
