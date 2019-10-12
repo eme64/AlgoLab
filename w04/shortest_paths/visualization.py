@@ -7,8 +7,8 @@ from subprocess import PIPE
 
 # # TODO: adapt the paths to the binary of your solution (the one that also outputs the list of edges on the shortest path)
 # # and to the input file (either lie.in, bern.in or nyc.in)
-binary_path = "/path/to/solution" # TODO
-filepath = "/path/to/lie.in" # TODO
+binary_path = "./run" # TODO
+filepath = "bern.in" # TODO
 
 # # TODO Uncomment the following three lines if you want to use the Google Maps images in the background
 # from PIL import Image, ImageTk
