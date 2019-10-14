@@ -1,0 +1,3 @@
+/home/emanuel/Documents/AlgoLab/pow04/CMakeFiles/edit_cache.dir
+/home/emanuel/Documents/AlgoLab/pow04/CMakeFiles/rebuild_cache.dir
+/home/emanuel/Documents/AlgoLab/pow04/CMakeFiles/code.dir
