@@ -12,7 +12,7 @@ struct Element {
       : x1(x1),x2(x2),x3(x3),x4(x4){};
    Element(const Element &el,long x1,long x2,long x3,long x4)
       : x1(el.x1+x1),x2(el.x2+x2),x3(el.x3+x3),x4(el.x4+x4){};
-   bool isLegal(long side) const {
+   bool isLegal(long side) {
       return x1<=side and x2<=side and x3<=side and x4<=side;
    }
    Element getMatch(long side) const {
@@ -48,10 +48,10 @@ void computeMap(
          const Element el_2(el,0,p,0,0);
          const Element el_3(el,0,0,p,0);
          const Element el_4(el,0,0,0,p);
-         if(el_1.isLegal(side)) { if(newTable.find(el_1) == table.end()) {newTable[el_1]=count;} else {newTable[el_1]+=count;} }
-         if(el_2.isLegal(side)) { if(newTable.find(el_2) == table.end()) {newTable[el_2]=count;} else {newTable[el_2]+=count;} }
-         if(el_3.isLegal(side)) { if(newTable.find(el_3) == table.end()) {newTable[el_3]=count;} else {newTable[el_3]+=count;} }
-         if(el_4.isLegal(side)) { if(newTable.find(el_4) == table.end()) {newTable[el_4]=count;} else {newTable[el_4]+=count;} }
+         if(newTable.find(el_1) == table.end()) {newTable[el_1]=count;} else {newTable[el_1]+=count;}
+         if(newTable.find(el_2) == table.end()) {newTable[el_2]=count;} else {newTable[el_2]+=count;}
+         if(newTable.find(el_3) == table.end()) {newTable[el_3]=count;} else {newTable[el_3]+=count;}
+         if(newTable.find(el_4) == table.end()) {newTable[el_4]=count;} else {newTable[el_4]+=count;}
       }
       std::swap(newTable,table);
    }
