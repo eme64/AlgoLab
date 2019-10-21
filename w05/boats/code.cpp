@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <climits>
 #include <queue>
+#include <cassert>
+#define NDEBUG
 
 // greedy: pick with current first end
 // this number is not stable: can be pushed forward
@@ -39,12 +41,13 @@ bool operator < (const Event& e1, const Event& e2) {
 };
 
 struct Element {
-   int pos;
+   int pos;int snd = 0;
    int index;
    Element(int pos,int index) : pos(pos),index(index) {};
+   Element(int pos,int snd,int index) : pos(pos),snd(snd),index(index) {};
 };
 bool operator > (const Element& e1, const Element& e2) {
-   return e1.pos > e2.pos;
+   return e1.pos > e2.pos or (e1.pos==e2.pos and e1.snd > e2.snd);
 };
 
 typedef std::priority_queue<Element,std::vector<Element>,std::greater<Element>> PQ;
@@ -84,17 +87,17 @@ struct Test {
    void insert(int i) {
       // decide weather in active 1 or 2:
       if(boundary <= p[i]-l[i]) {
-         activeFree.push(Element(p[i],i));
+         activeFree.push(Element(p[i],l[i],i));
          activeFreeBegin.push(Element(p[i]-l[i],i));
       } else {
-         activeLen.push(Element(l[i],i));
+         activeLen.push(Element(l[i],p[i],i));
       }
    };
    
    Element peekActiveFree() {
       while(!activeFree.empty()) {
          Element e = activeFree.top();
-	 if(e.pos < boundary or taken[e.index]) {
+	 if(p[e.index]-l[e.index] < boundary or taken[e.index]) {
 	    activeFree.pop();//boundary has constrained it
 	 } else {
 	    return e;
@@ -105,10 +108,14 @@ struct Test {
  
    Element peekActiveLen() {
       while(!activeLen.empty()) {
-	 std::cout << "size " << activeLen.size() << std::endl;
+	 //std::cout << "size before " << activeLen.size() << std::endl;
+	 if(activeLen.size()>2*n) {assert(false);}
 	 Element e = activeLen.top();
+	 if(activeLen.size()>2*n) {assert(false);}
 	 if(p[e.index] < boundary or taken[e.index]) {
+	    if(activeLen.size()==0) {assert(false);}
 	    activeLen.pop();//boundary has made it impossible
+	    if(activeLen.size()>2*n) {assert(false);}
 	 } else {
 	    return e;
 	 }
@@ -120,20 +127,20 @@ struct Test {
       // see what minimum end value is
       Element e1 = peekActiveFree();
       Element e2 = peekActiveLen();
-      std::cout << "peekMin " << e1.index << " " << e2.index << std::endl;
+      //std::cout << "peekMin " << e1.index << " " << e2.index << std::endl;
       if(e1.index==-1 and e2.index==-1) {return nullEl;}
-      if(e1.index==-1) {return Element(e2.pos+boundary,e2.index);}
+      if(e1.index==-1) {return Element(l[e2.index]+boundary,e2.index);}
       if(e2.index==-1) {return e1;}
-      return (e1.pos <= e2.pos + boundary) ? e1:Element(e2.pos+boundary,e2.index);
+      return (e1.pos < l[e2.index] + boundary) ? e1:Element(l[e2.index]+boundary,e2.index);
    }
    
    void popMin() {
       Element e1 = peekActiveFree();
       Element e2 = peekActiveLen();
       if(e1.index==-1 and e2.index==-1) {return;}
-      if(e1.index==-1) {activeLen.pop();}
-      if(e2.index==-1) {activeFree.pop();}
-      if (e1.pos <= e2.pos + boundary) {
+      if(e1.index==-1) {activeLen.pop();return;}
+      if(e2.index==-1) {activeFree.pop(); return;}
+      if (e1.pos < l[e2.index] + boundary) {
          activeFree.pop();
       } else {
          activeLen.pop();
@@ -147,8 +154,9 @@ struct Test {
       while(!activeFreeBegin.empty()) {
          Element e = activeFreeBegin.top();
          if(boundary>p[e.index]-l[e.index]) {
+	    //std::cout << "boundary intersects " << e.index << " " << boundary << std::endl;
 	    activeFreeBegin.pop();
-	    activeLen.push(Element(l[e.index],e.index));
+	    activeLen.push(Element(l[e.index],p[e.index],e.index));
 	 } else {
 	    return;
 	 }
@@ -164,11 +172,14 @@ struct Test {
          if(e.index==-1) {break;} // take as long as there is sth
          if(e.pos>top) {break;} // take up to p+l
          // take e:
+	 assert(taken[e.index]==false);
+	 assert(boundary+l[e.index]<=e.pos);
+	 assert(e.pos <= top);
          count++;
-         taken[e.index]=true;
          popMin(); // pop e
+         taken[e.index]=true;
+         //std::cout << "take " << e.index << " " << e.pos << " " << l[e.index] << " " << p[e.index] << std::endl;
          boundaryIs(e.pos);
-         std::cout << "take " << e.index << " " << e.pos << std::endl;
       }
    };
 
@@ -177,11 +188,11 @@ struct Test {
          const Event &ev(events[i]);
 	 if(ev.isBegin) {
 	    // handle begin
-            std::cout << "begin " << ev.index << std::endl;
+            //std::cout << "begin " << ev.index << std::endl;
 	    insert(ev.index);
 	 } else {
 	    // handle end
-            std::cout << "end " << ev.index << std::endl;
+            //std::cout << "end " << ev.index << std::endl;
 	    remove(ev.index);
 	 }
       }
