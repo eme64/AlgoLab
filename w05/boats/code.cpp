@@ -18,10 +18,13 @@
 // enter: begin(p-l), end(p+l)
 // on begin: put in active set
 // on end: take me or better one that could end earlier
-// once in life go from active1 to active2
-// active1: active but maxBoundary not contacted - sort by p
-//  - also: contact list: sort by p-l - remove if overstepped
-// active2: contact with maxBoundary - sort by l
+// take one that ends earliest, up to end of this
+// ends earliest:
+//    activeFree: if not constrained by boundary (b <=p-l), enter for p
+//    activeLen: else - enter for l
+// pick min of the two heaps
+// when one picked: update boundary
+// find all that are now constrained: need activeFreeBegin minheap
 // should lead to O(nlogn)
 
 
@@ -40,35 +43,38 @@ struct Element {
    int index;
    Element(int pos,int index) : pos(pos),index(index) {};
 };
-bool operator < (const Element& e1, const Element& e2) {
-   return e1.pos < e2.pos;
+bool operator > (const Element& e1, const Element& e2) {
+   return e1.pos > e2.pos;
 };
+
+typedef std::priority_queue<Element,std::vector<Element>,std::greater<Element>> PQ;
+
 struct Test {
    int n;
    std::vector<int> p;
    std::vector<int> l;
-   std::vector<bool> marked;
+   std::vector<bool> taken;
    std::vector<Event> events;
    int boundary;
-   std::priority_queue<Element> active1; // contains boat for p if boundary <= p-l
-   std::priority_queue<Element> contactList; // contains boat for p-l if boundary <= p-l
-   std::priority_queue<Element> active2; // contains boat for l if boundary > p-l
+   PQ activeFree; // contains boat for p if boundary <= p-l
+   PQ activeFreeBegin; // contains boat for p-l if boundary <= p-l
+   PQ activeLen; // contains boat for l if boundary > p-l
    
    int count;
 
-   const Element nullEl(INT_MAX,-1);
+   const Element nullEl = Element(INT_MAX,-1);
 
    void read() {
       std::cin >> n;
       events.reserve(2*n);
       l.resize(n);
       p.resize(n);
-      marked.resize(n);
+      taken.resize(n);
       for(int i=0;i<n;i++) {
 	 std::cin >> l[i] >> p[i];
          events.push_back(Event(i,true,p[i]-l[i]));
          events.push_back(Event(i,false,p[i]+l[i]));
-	 marked[i] = false;
+         taken[i]=false;
       }
       std::sort(events.begin(),events.end());
       boundary = events[0].pos -1;
@@ -78,53 +84,92 @@ struct Test {
    void insert(int i) {
       // decide weather in active 1 or 2:
       if(boundary <= p[i]-l[i]) {
-         active1.push(Element(p[i],i));
-         contactList.push(Element(p[i]-l[i],i));
+         activeFree.push(Element(p[i],i));
+         activeFreeBegin.push(Element(p[i]-l[i],i));
       } else {
-         active2.push(Element(l[i],i));
+         activeLen.push(Element(l[i],i));
       }
    };
    
-   Element& peekMin(std::priority_queue<Element> &q) {
-      // peekMin, but remove marked Elements
-      while(q.top()!=q.end()) {
-         Element &e = q.top();
-	 if(marked[e.index]) {
-	    q.pop();
+   Element peekActiveFree() {
+      while(!activeFree.empty()) {
+         Element e = activeFree.top();
+	 if(e.pos < boundary or taken[e.index]) {
+	    activeFree.pop();//boundary has constrained it
 	 } else {
 	    return e;
 	 }
       }
       return nullEl;
    }
-
-   int peekMin() {
-      // see what minimum end value is
-      int minEnd(INT_MAX);
-      Element &e1 = peekMin(active1);
-      if(e1!=nullEl) {
-         minEnd = e1.pos;
+ 
+   Element peekActiveLen() {
+      while(!activeLen.empty()) {
+	 std::cout << "size " << activeLen.size() << std::endl;
+	 Element e = activeLen.top();
+	 if(p[e.index] < boundary or taken[e.index]) {
+	    activeLen.pop();//boundary has made it impossible
+	 } else {
+	    return e;
+	 }
       }
-      Element &e2 = peekMin(active2);
-      
-   } 
+      return nullEl;
+   }
+   
+   Element peekMin() {
+      // see what minimum end value is
+      Element e1 = peekActiveFree();
+      Element e2 = peekActiveLen();
+      std::cout << "peekMin " << e1.index << " " << e2.index << std::endl;
+      if(e1.index==-1 and e2.index==-1) {return nullEl;}
+      if(e1.index==-1) {return Element(e2.pos+boundary,e2.index);}
+      if(e2.index==-1) {return e1;}
+      return (e1.pos <= e2.pos + boundary) ? e1:Element(e2.pos+boundary,e2.index);
+   }
+   
+   void popMin() {
+      Element e1 = peekActiveFree();
+      Element e2 = peekActiveLen();
+      if(e1.index==-1 and e2.index==-1) {return;}
+      if(e1.index==-1) {activeLen.pop();}
+      if(e2.index==-1) {activeFree.pop();}
+      if (e1.pos <= e2.pos + boundary) {
+         activeFree.pop();
+      } else {
+         activeLen.pop();
+      }
+   }
+   
+   void boundaryIs(int b) {
+      boundary = b;
+
+      // process activeFreeBegin -> put into activeLen
+      while(!activeFreeBegin.empty()) {
+         Element e = activeFreeBegin.top();
+         if(boundary>p[e.index]-l[e.index]) {
+	    activeFreeBegin.pop();
+	    activeLen.push(Element(l[e.index],e.index));
+	 } else {
+	    return;
+	 }
+      }
+   }
 
    void remove(int i) {
       // check if i could still work:
-      if(boundary <= p[i]) {
-         // could take i, or something better
-         // take as much up to p+l
-	 int top = p[i]+l[i];
+      int top = p[i]+l[i];
 
-	 while() {}
-	 //std::cout << "take " << i << std::endl;
-	 //int boundaryI = std::max(boundary + l[i], p[i]);
-	 //count++;
-      } else {
-         // cannot take i
-	 std::cout << "reject " << i << std::endl;
+      while(true) {
+         Element e = peekMin();
+         if(e.index==-1) {break;} // take as long as there is sth
+         if(e.pos>top) {break;} // take up to p+l
+         // take e:
+         count++;
+         taken[e.index]=true;
+         popMin(); // pop e
+         boundaryIs(e.pos);
+         std::cout << "take " << e.index << " " << e.pos << std::endl;
       }
-      marked[i] = true;
    };
 
    void run() {
@@ -133,11 +178,11 @@ struct Test {
 	 if(ev.isBegin) {
 	    // handle begin
             std::cout << "begin " << ev.index << std::endl;
-	    insert(i);
+	    insert(ev.index);
 	 } else {
 	    // handle end
             std::cout << "end " << ev.index << std::endl;
-	    remove(i);
+	    remove(ev.index);
 	 }
       }
    };
@@ -149,11 +194,11 @@ int main () {
    int t(0);
    std::cin >> t;
    
-   Test test;
+   Test *test = new Test();
 
    for(int tt=0; tt<t; tt++) {
-      test.read();
-      test.run();
-      std::cout << test.count << std::endl;
+      test->read();
+      test->run();
+      std::cout << test->count << std::endl;
    }
 }
