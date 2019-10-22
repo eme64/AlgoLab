@@ -1,0 +1,1956 @@
+processing 8
+take (free) 8 from -3 to 1
+processing 9
+wait (constrained) 9
+processing 4
+take (free) 4 from 2 to 3
+processing 6
+take (free) 6 from 3 to 4
+processing 1
+wait (constrained) 1
+processing 3
+take (other, this constrained) 1 to 6
+wait (after other, this constrained) 3
+processing 0
+wait (constrained) 0
+processing 7
+wait (constrained) 7
+processing 2
+take (other) 7 to 9
+wait (after other) 2
+processing 5
+take (other, this constrained) 2 to 10
+wait (after other, this constrained) 5
+take last 5
+7
+processing 0
+take (free) 0 from -994 to 6
+processing 2
+wait (constrained) 2
+processing 3
+wait (constrained) 3
+processing 4
+wait (constrained) 4
+processing 5
+wait (constrained) 5
+processing 6
+wait (constrained) 6
+processing 7
+wait (constrained) 7
+processing 8
+wait (constrained) 8
+processing 9
+take (other, this constrained) 8 to 36
+reject 9
+processing 10
+reject 10
+processing 11
+reject 11
+processing 12
+reject 12
+processing 13
+reject 13
+processing 14
+reject 14
+processing 15
+reject 15
+processing 1
+wait (constrained) 1
+take last 1
+3
+processing 78
+take (free) 78 from -1718 to 21
+processing 51
+wait (constrained) 51
+processing 71
+take (other, this constrained) 51 to 1772
+reject 71
+processing 29
+reject 29
+processing 43
+reject 43
+processing 91
+reject 91
+processing 93
+reject 93
+processing 44
+reject 44
+processing 12
+reject 12
+processing 60
+reject 60
+processing 63
+reject 63
+processing 31
+reject 31
+processing 39
+reject 39
+processing 83
+reject 83
+processing 52
+reject 52
+processing 45
+reject 45
+processing 94
+reject 94
+processing 69
+reject 69
+processing 17
+reject 17
+processing 74
+reject 74
+processing 3
+reject 3
+processing 19
+wait (constrained) 19
+processing 24
+wait (constrained) 24
+processing 38
+take (other, this constrained) 24 to 3514
+reject 38
+processing 77
+reject 77
+processing 54
+reject 54
+processing 90
+reject 90
+processing 47
+reject 47
+processing 73
+reject 73
+processing 23
+reject 23
+processing 13
+reject 13
+processing 82
+reject 82
+processing 2
+reject 2
+processing 67
+reject 67
+processing 42
+reject 42
+processing 37
+reject 37
+processing 89
+reject 89
+processing 33
+reject 33
+processing 75
+reject 75
+processing 50
+reject 50
+processing 55
+reject 55
+processing 0
+wait (constrained) 0
+processing 36
+reject (other constrained) 36
+processing 95
+reject (other constrained) 95
+processing 28
+reject (other constrained) 28
+processing 5
+reject (other constrained) 5
+processing 80
+reject (other constrained) 80
+processing 9
+wait (constrained) 9
+processing 66
+wait (constrained) 66
+processing 30
+wait (constrained) 30
+processing 49
+wait (constrained) 49
+processing 64
+wait (constrained) 64
+processing 79
+wait (constrained) 79
+processing 65
+wait (constrained) 65
+processing 81
+wait (constrained) 81
+processing 40
+wait (constrained) 40
+processing 41
+wait (constrained) 41
+processing 72
+wait (constrained) 72
+processing 25
+take (free) 25 from 3524 to 5040
+processing 7
+wait (constrained) 7
+processing 59
+wait (constrained) 59
+processing 61
+wait (constrained) 61
+processing 68
+wait (constrained) 68
+processing 8
+wait (constrained) 8
+processing 32
+wait (constrained) 32
+processing 15
+wait (constrained) 15
+processing 62
+wait (constrained) 62
+processing 76
+wait (constrained) 76
+processing 21
+wait (constrained) 21
+processing 18
+wait (constrained) 18
+processing 48
+wait (constrained) 48
+processing 85
+wait (constrained) 85
+processing 86
+wait (constrained) 86
+processing 22
+wait (constrained) 22
+processing 70
+take (other) 22 to 6286
+wait (after other) 70
+processing 10
+wait (constrained) 10
+processing 87
+wait (constrained) 87
+processing 92
+wait (constrained) 92
+processing 11
+wait (constrained) 11
+processing 35
+wait (constrained) 35
+processing 58
+wait (constrained) 58
+processing 4
+wait (constrained) 4
+processing 1
+wait (constrained) 1
+processing 57
+wait (constrained) 57
+processing 56
+wait (constrained) 56
+processing 6
+wait (constrained) 6
+processing 27
+take (other) 6 to 7315
+wait (after other) 27
+processing 88
+wait (constrained) 88
+processing 14
+wait (constrained) 14
+processing 53
+wait (constrained) 53
+processing 20
+wait (constrained) 20
+processing 26
+wait (constrained) 26
+processing 16
+wait (constrained) 16
+processing 46
+wait (constrained) 46
+processing 34
+wait (constrained) 34
+processing 84
+take (other) 34 to 8180
+wait (after other) 84
+take last 84
+8
+processing 294
+take (free) 294 from -973 to 37
+processing 396
+wait (constrained) 396
+processing 497
+wait (constrained) 497
+processing 208
+take (other, this constrained) 497 to 1129
+reject 208
+processing 101
+reject 101
+processing 678
+reject 678
+processing 130
+reject 130
+processing 322
+reject 322
+processing 409
+reject 409
+processing 134
+reject 134
+processing 389
+reject 389
+processing 97
+wait (constrained) 97
+processing 462
+wait (constrained) 462
+processing 388
+wait (constrained) 388
+processing 167
+wait (constrained) 167
+processing 603
+take (other, this constrained) 167 to 2158
+reject 603
+processing 650
+reject 650
+processing 719
+reject 719
+processing 642
+reject 642
+processing 216
+reject 216
+processing 583
+reject 583
+processing 355
+reject 355
+processing 154
+reject 154
+processing 673
+wait (constrained) 673
+processing 311
+take (other, this constrained) 673 to 3300
+reject 311
+processing 0
+reject 0
+processing 717
+reject 717
+processing 680
+reject 680
+processing 342
+reject 342
+processing 688
+reject 688
+processing 737
+reject 737
+processing 777
+reject 777
+processing 785
+reject 785
+processing 683
+wait (constrained) 683
+processing 559
+take (other, this constrained) 683 to 4301
+reject 559
+processing 415
+reject 415
+processing 301
+reject 301
+processing 265
+reject 265
+processing 291
+reject 291
+processing 561
+reject 561
+processing 56
+reject 56
+processing 646
+wait (constrained) 646
+processing 201
+wait (constrained) 201
+processing 132
+wait (constrained) 132
+processing 509
+take (other) 132 to 5343
+wait (after other) 509
+processing 429
+take (other, this constrained) 509 to 6416
+reject 429
+processing 488
+reject 488
+processing 378
+reject 378
+processing 655
+reject 655
+processing 263
+reject 263
+processing 763
+reject 763
+processing 96
+reject 96
+processing 62
+reject 62
+processing 238
+reject 238
+processing 653
+wait (constrained) 653
+processing 595
+take (other, this constrained) 653 to 7518
+reject 595
+processing 65
+reject 65
+processing 724
+reject 724
+processing 48
+reject 48
+processing 161
+reject 161
+processing 9
+reject 9
+processing 665
+reject 665
+processing 225
+reject 225
+processing 28
+reject 28
+processing 186
+reject 186
+processing 798
+reject 798
+processing 133
+reject 133
+processing 712
+reject 712
+processing 93
+reject 93
+processing 591
+reject 591
+processing 543
+reject 543
+processing 337
+reject 337
+processing 223
+wait (constrained) 223
+processing 213
+wait (constrained) 213
+processing 386
+take (other, this constrained) 213 to 8526
+reject 386
+processing 743
+reject 743
+processing 332
+reject 332
+processing 637
+reject 637
+processing 533
+reject 533
+processing 35
+reject 35
+processing 163
+wait (constrained) 163
+processing 675
+wait (constrained) 675
+processing 605
+take (other, this constrained) 675 to 9587
+reject 605
+processing 687
+reject 687
+processing 621
+wait (constrained) 621
+processing 708
+wait (constrained) 708
+processing 348
+take (other, this constrained) 708 to 10685
+reject 348
+processing 620
+reject 620
+processing 303
+reject 303
+processing 685
+reject 685
+processing 88
+reject 88
+processing 319
+reject 319
+processing 248
+reject 248
+processing 261
+wait (constrained) 261
+processing 145
+take (other, this constrained) 261 to 11696
+reject 145
+processing 756
+reject 756
+processing 380
+reject 380
+processing 276
+reject 276
+processing 411
+reject 411
+processing 353
+reject 353
+processing 327
+reject 327
+processing 159
+reject 159
+processing 452
+reject 452
+processing 317
+reject 317
+processing 385
+reject 385
+processing 64
+reject 64
+processing 7
+wait (constrained) 7
+processing 629
+take (other, this constrained) 7 to 12750
+reject 629
+processing 440
+reject 440
+processing 701
+reject 701
+processing 456
+reject 456
+processing 539
+reject 539
+processing 599
+reject 599
+processing 740
+reject 740
+processing 246
+reject 246
+processing 116
+reject 116
+processing 669
+wait (constrained) 669
+processing 69
+wait (constrained) 69
+processing 384
+take (other, this constrained) 69 to 13848
+reject 384
+processing 315
+reject 315
+processing 369
+reject 369
+processing 491
+reject 491
+processing 616
+wait (constrained) 616
+processing 209
+take (other, this constrained) 616 to 14850
+reject 209
+processing 359
+reject 359
+processing 20
+reject 20
+processing 277
+wait (constrained) 277
+processing 453
+take (other, this constrained) 277 to 15976
+reject 453
+processing 59
+reject 59
+processing 418
+reject 418
+processing 514
+reject 514
+processing 535
+reject 535
+processing 787
+reject 787
+processing 610
+reject 610
+processing 791
+wait (constrained) 791
+processing 660
+take (other, this constrained) 791 to 17117
+reject 660
+processing 98
+reject 98
+processing 157
+reject 157
+processing 45
+reject 45
+processing 702
+reject 702
+processing 770
+reject 770
+processing 298
+reject 298
+processing 14
+reject 14
+processing 78
+wait (constrained) 78
+processing 104
+take (other, this constrained) 78 to 18159
+reject 104
+processing 182
+reject 182
+processing 776
+reject 776
+processing 175
+reject 175
+processing 608
+reject 608
+processing 570
+reject 570
+processing 496
+wait (constrained) 496
+processing 255
+wait (constrained) 255
+processing 466
+take (other, this constrained) 255 to 19186
+reject 466
+processing 799
+reject 799
+processing 250
+reject 250
+processing 516
+wait (constrained) 516
+processing 613
+take (other, this constrained) 516 to 20204
+reject 613
+processing 472
+reject 472
+processing 211
+reject 211
+processing 273
+reject 273
+processing 484
+reject 484
+processing 779
+reject 779
+processing 376
+reject 376
+processing 541
+wait (constrained) 541
+processing 571
+take (other, this constrained) 541 to 21218
+reject 571
+processing 343
+reject 343
+processing 102
+reject 102
+processing 573
+reject 573
+processing 307
+reject 307
+processing 558
+reject 558
+processing 638
+reject 638
+processing 259
+reject 259
+processing 287
+reject 287
+processing 286
+wait (constrained) 286
+processing 523
+wait (constrained) 523
+processing 111
+wait (constrained) 111
+processing 438
+take (other, this constrained) 111 to 22227
+reject 438
+processing 249
+reject 249
+processing 269
+reject 269
+processing 52
+reject 52
+processing 297
+reject 297
+processing 82
+wait (constrained) 82
+processing 550
+take (other, this constrained) 82 to 23247
+reject 550
+processing 697
+reject 697
+processing 16
+reject 16
+processing 520
+reject 520
+processing 313
+reject 313
+processing 228
+reject 228
+processing 493
+reject 493
+processing 79
+wait (constrained) 79
+processing 71
+wait (constrained) 71
+processing 792
+take (other, this constrained) 71 to 24290
+reject 792
+processing 689
+reject 689
+processing 483
+reject 483
+processing 416
+reject 416
+processing 349
+reject 349
+processing 395
+reject 395
+processing 609
+reject 609
+processing 784
+reject 784
+processing 267
+reject 267
+processing 435
+reject 435
+processing 282
+reject 282
+processing 471
+wait (constrained) 471
+processing 84
+take (other, this constrained) 471 to 25305
+reject 84
+processing 522
+reject 522
+processing 450
+reject 450
+processing 449
+reject 449
+processing 430
+reject 430
+processing 75
+reject 75
+processing 22
+reject 22
+processing 596
+reject 596
+processing 725
+wait (constrained) 725
+processing 218
+wait (constrained) 218
+processing 423
+take (other, this constrained) 218 to 26328
+reject 423
+processing 370
+reject 370
+processing 578
+reject 578
+processing 754
+reject 754
+processing 762
+reject 762
+processing 95
+reject 95
+processing 589
+reject 589
+processing 383
+reject 383
+processing 588
+reject 588
+processing 656
+reject 656
+processing 202
+wait (constrained) 202
+processing 556
+take (other, this constrained) 202 to 27373
+reject 556
+processing 734
+reject 734
+processing 46
+reject 46
+processing 66
+reject 66
+processing 425
+reject 425
+processing 12
+wait (constrained) 12
+processing 753
+wait (constrained) 753
+processing 759
+wait (constrained) 759
+processing 302
+take (other, this constrained) 759 to 28378
+reject 302
+processing 32
+reject 32
+processing 457
+reject 457
+processing 141
+reject 141
+processing 227
+reject 227
+processing 447
+wait (constrained) 447
+processing 723
+take (other, this constrained) 447 to 29501
+reject 723
+processing 521
+reject 521
+processing 108
+reject 108
+processing 727
+reject 727
+processing 304
+reject 304
+processing 368
+reject 368
+processing 666
+wait (constrained) 666
+processing 162
+take (other, this constrained) 666 to 30541
+reject 162
+processing 289
+reject 289
+processing 320
+reject 320
+processing 139
+reject 139
+processing 245
+reject 245
+processing 149
+reject 149
+processing 585
+reject 585
+processing 293
+wait (constrained) 293
+processing 244
+take (other, this constrained) 293 to 31571
+reject 244
+processing 469
+reject 469
+processing 552
+reject 552
+processing 33
+reject 33
+processing 76
+reject 76
+processing 431
+reject 431
+processing 80
+reject 80
+processing 563
+reject 563
+processing 580
+reject 580
+processing 285
+reject 285
+processing 464
+reject 464
+processing 568
+wait (constrained) 568
+processing 260
+wait (constrained) 260
+processing 174
+take (other, this constrained) 260 to 32586
+reject 174
+processing 748
+reject 748
+processing 773
+reject 773
+processing 2
+reject 2
+processing 374
+reject 374
+processing 5
+reject 5
+processing 534
+wait (constrained) 534
+processing 67
+wait (constrained) 67
+processing 721
+take (other, this constrained) 67 to 33630
+reject 721
+processing 442
+reject 442
+processing 448
+reject 448
+processing 345
+reject 345
+processing 189
+reject 189
+processing 1
+reject 1
+processing 89
+reject 89
+processing 272
+wait (constrained) 272
+processing 197
+take (other, this constrained) 272 to 34672
+reject 197
+processing 674
+reject 674
+processing 400
+reject 400
+processing 360
+reject 360
+processing 314
+reject 314
+processing 234
+reject 234
+processing 398
+wait (constrained) 398
+processing 795
+wait (constrained) 795
+processing 576
+take (other, this constrained) 795 to 35685
+reject 576
+processing 458
+reject 458
+processing 158
+reject 158
+processing 482
+reject 482
+processing 229
+reject 229
+processing 204
+reject 204
+processing 341
+wait (constrained) 341
+processing 766
+wait (constrained) 766
+processing 143
+take (other, this constrained) 766 to 36701
+reject 143
+processing 422
+reject 422
+processing 794
+reject 794
+processing 427
+reject 427
+processing 677
+reject 677
+processing 326
+reject 326
+processing 42
+reject 42
+processing 340
+wait (constrained) 340
+processing 346
+take (other, this constrained) 340 to 37701
+reject 346
+processing 731
+reject 731
+processing 681
+reject 681
+processing 713
+reject 713
+processing 511
+reject 511
+processing 15
+reject 15
+processing 36
+reject 36
+processing 118
+reject 118
+processing 500
+reject 500
+processing 114
+wait (constrained) 114
+processing 292
+take (other, this constrained) 114 to 38725
+reject 292
+processing 402
+reject 402
+processing 122
+reject 122
+processing 8
+reject 8
+processing 190
+reject 190
+processing 536
+reject 536
+processing 602
+reject 602
+processing 751
+wait (constrained) 751
+processing 274
+wait (constrained) 274
+processing 420
+wait (constrained) 420
+processing 525
+take (other, this constrained) 420 to 39729
+reject 525
+processing 644
+reject 644
+processing 489
+reject 489
+processing 54
+reject 54
+processing 572
+reject 572
+processing 144
+reject 144
+processing 735
+wait (constrained) 735
+processing 530
+wait (constrained) 530
+processing 137
+take (other, this constrained) 530 to 40746
+reject 137
+processing 625
+reject 625
+processing 661
+reject 661
+processing 764
+reject 764
+processing 515
+reject 515
+processing 329
+reject 329
+processing 499
+reject 499
+processing 10
+reject 10
+processing 281
+wait (constrained) 281
+processing 257
+wait (constrained) 257
+processing 251
+wait (constrained) 251
+processing 401
+take (other, this constrained) 251 to 41770
+reject 401
+processing 575
+reject 575
+processing 168
+reject 168
+processing 242
+wait (constrained) 242
+processing 707
+wait (constrained) 707
+processing 437
+take (other, this constrained) 707 to 42778
+reject 437
+processing 728
+reject 728
+processing 461
+reject 461
+processing 347
+reject 347
+processing 113
+reject 113
+processing 131
+reject 131
+processing 722
+reject 722
+processing 628
+reject 628
+processing 323
+reject 323
+processing 280
+reject 280
+processing 664
+wait (constrained) 664
+processing 582
+take (other, this constrained) 664 to 43789
+reject 582
+processing 270
+reject 270
+processing 781
+reject 781
+processing 34
+reject 34
+processing 390
+reject 390
+processing 716
+reject 716
+processing 480
+reject 480
+processing 512
+reject 512
+processing 726
+reject 726
+processing 109
+wait (constrained) 109
+processing 358
+wait (constrained) 358
+processing 459
+take (other, this constrained) 358 to 44794
+reject 459
+processing 299
+reject 299
+processing 645
+reject 645
+processing 704
+reject 704
+processing 506
+wait (constrained) 506
+processing 551
+wait (constrained) 551
+processing 115
+take (other, this constrained) 551 to 45806
+reject 115
+processing 275
+reject 275
+processing 29
+reject 29
+processing 100
+reject 100
+processing 772
+reject 772
+processing 288
+reject 288
+processing 597
+reject 597
+processing 212
+reject 212
+processing 476
+reject 476
+processing 517
+wait (constrained) 517
+processing 381
+wait (constrained) 381
+processing 312
+take (other, this constrained) 381 to 46898
+reject 312
+processing 584
+reject 584
+processing 730
+reject 730
+processing 155
+wait (constrained) 155
+processing 90
+take (other, this constrained) 155 to 47937
+reject 90
+processing 146
+reject 146
+processing 640
+reject 640
+processing 460
+reject 460
+processing 738
+reject 738
+processing 769
+reject 769
+processing 529
+wait (constrained) 529
+processing 181
+wait (constrained) 181
+processing 19
+wait (constrained) 19
+processing 565
+take (other, this constrained) 19 to 48981
+reject 565
+processing 160
+reject 160
+processing 164
+reject 164
+processing 333
+wait (constrained) 333
+processing 508
+take (other, this constrained) 333 to 50005
+reject 508
+processing 778
+reject 778
+processing 393
+reject 393
+processing 652
+reject 652
+processing 455
+reject 455
+processing 136
+reject 136
+processing 465
+reject 465
+processing 601
+reject 601
+processing 451
+wait (constrained) 451
+processing 129
+take (other, this constrained) 451 to 51034
+reject 129
+processing 444
+reject 444
+processing 548
+reject 548
+processing 651
+reject 651
+processing 532
+reject 532
+processing 780
+reject 780
+processing 180
+reject 180
+processing 394
+reject 394
+processing 654
+reject 654
+processing 790
+wait (constrained) 790
+processing 4
+wait (constrained) 4
+processing 634
+wait (constrained) 634
+processing 300
+wait (constrained) 300
+processing 714
+take (other, this constrained) 300 to 52036
+reject 714
+processing 502
+reject 502
+processing 797
+reject 797
+processing 746
+reject 746
+processing 279
+reject 279
+processing 236
+wait (constrained) 236
+processing 334
+take (other, this constrained) 236 to 53115
+reject 334
+processing 557
+reject 557
+processing 364
+reject 364
+processing 478
+reject 478
+processing 309
+wait (constrained) 309
+processing 344
+wait (constrained) 344
+processing 747
+wait (constrained) 747
+processing 41
+wait (constrained) 41
+processing 518
+take (other, this constrained) 41 to 54128
+reject 518
+processing 718
+reject 718
+processing 549
+reject 549
+processing 470
+reject 470
+processing 308
+reject 308
+processing 142
+wait (constrained) 142
+processing 793
+wait (constrained) 793
+processing 443
+take (other, this constrained) 793 to 55197
+reject 443
+processing 490
+reject 490
+processing 235
+reject 235
+processing 305
+reject 305
+processing 199
+reject 199
+processing 604
+reject 604
+processing 147
+reject 147
+processing 205
+reject 205
+processing 574
+reject 574
+processing 741
+wait (constrained) 741
+processing 153
+take (other, this constrained) 741 to 56248
+reject 153
+processing 696
+reject 696
+processing 99
+reject 99
+processing 504
+reject 504
+processing 405
+reject 405
+processing 243
+reject 243
+processing 649
+wait (constrained) 649
+processing 25
+wait (constrained) 25
+processing 325
+wait (constrained) 325
+processing 705
+take (other, this constrained) 325 to 57278
+reject 705
+processing 631
+reject 631
+processing 403
+wait (constrained) 403
+processing 408
+wait (constrained) 408
+processing 662
+take (other, this constrained) 408 to 58306
+reject 662
+processing 127
+reject 127
+processing 498
+wait (constrained) 498
+processing 124
+wait (constrained) 124
+processing 148
+take (other, this constrained) 124 to 59386
+reject 148
+processing 619
+reject 619
+processing 473
+reject 473
+processing 126
+reject 126
+processing 419
+reject 419
+processing 47
+reject 47
+processing 13
+reject 13
+processing 555
+reject 555
+processing 760
+reject 760
+processing 237
+reject 237
+processing 373
+wait (constrained) 373
+processing 624
+take (other, this constrained) 373 to 60437
+reject 624
+processing 618
+reject 618
+processing 786
+reject 786
+processing 367
+reject 367
+processing 594
+reject 594
+processing 692
+reject 692
+processing 278
+reject 278
+processing 554
+reject 554
+processing 92
+wait (constrained) 92
+processing 627
+wait (constrained) 627
+processing 775
+take (other, this constrained) 627 to 61443
+reject 775
+processing 253
+reject 253
+processing 152
+reject 152
+processing 567
+wait (constrained) 567
+processing 528
+take (other, this constrained) 567 to 62477
+reject 528
+processing 184
+reject 184
+processing 295
+reject 295
+processing 171
+reject 171
+processing 179
+reject 179
+processing 527
+reject 527
+processing 361
+wait (constrained) 361
+processing 233
+take (other, this constrained) 361 to 63513
+reject 233
+processing 183
+reject 183
+processing 720
+reject 720
+processing 745
+reject 745
+processing 771
+wait (constrained) 771
+processing 789
+wait (constrained) 789
+processing 454
+take (other, this constrained) 789 to 64533
+reject 454
+processing 51
+reject 51
+processing 553
+reject 553
+processing 729
+reject 729
+processing 178
+reject 178
+processing 436
+reject 436
+processing 694
+reject 694
+processing 128
+wait (constrained) 128
+processing 379
+wait (constrained) 379
+processing 485
+wait (constrained) 485
+processing 477
+wait (constrained) 477
+processing 698
+take (other, this constrained) 477 to 65579
+reject 698
+processing 214
+reject 214
+processing 165
+reject 165
+processing 38
+reject 38
+processing 788
+reject 788
+processing 224
+reject 224
+processing 503
+wait (constrained) 503
+processing 256
+wait (constrained) 256
+processing 336
+wait (constrained) 336
+processing 424
+take (other, this constrained) 336 to 66684
+reject 424
+processing 117
+reject 117
+processing 404
+reject 404
+processing 94
+reject 94
+processing 682
+reject 682
+processing 328
+wait (constrained) 328
+processing 494
+wait (constrained) 494
+processing 611
+take (other, this constrained) 494 to 67817
+reject 611
+processing 750
+reject 750
+processing 445
+reject 445
+processing 372
+reject 372
+processing 172
+wait (constrained) 172
+processing 622
+take (other, this constrained) 172 to 68906
+reject 622
+processing 107
+reject 107
+processing 635
+reject 635
+processing 357
+reject 357
+processing 106
+reject 106
+processing 612
+reject 612
+processing 686
+reject 686
+processing 711
+wait (constrained) 711
+processing 564
+wait (constrained) 564
+processing 30
+take (other, this constrained) 564 to 69959
+reject 30
+processing 397
+reject 397
+processing 18
+reject 18
+processing 560
+reject 560
+processing 736
+wait (constrained) 736
+processing 639
+wait (constrained) 639
+processing 545
+take (other, this constrained) 639 to 71019
+reject 545
+processing 426
+reject 426
+processing 749
+reject 749
+processing 169
+reject 169
+processing 203
+reject 203
+processing 266
+reject 266
+processing 338
+reject 338
+processing 40
+wait (constrained) 40
+processing 744
+take (other, this constrained) 40 to 72044
+reject 744
+processing 191
+reject 191
+processing 241
+reject 241
+processing 598
+reject 598
+processing 767
+reject 767
+processing 540
+reject 540
+processing 318
+reject 318
+processing 715
+reject 715
+processing 782
+wait (constrained) 782
+processing 352
+take (other, this constrained) 782 to 73060
+reject 352
+processing 486
+reject 486
+processing 57
+reject 57
+processing 679
+reject 679
+processing 120
+reject 120
+processing 258
+reject 258
+processing 239
+wait (constrained) 239
+processing 366
+wait (constrained) 366
+processing 254
+take (other, this constrained) 366 to 74076
+reject 254
+processing 761
+reject 761
+processing 587
+reject 587
+processing 672
+reject 672
+processing 474
+reject 474
+processing 207
+reject 207
+processing 693
+reject 693
+processing 296
+reject 296
+processing 60
+wait (constrained) 60
+processing 138
+take (other, this constrained) 60 to 75129
+reject 138
+processing 264
+reject 264
+processing 83
+reject 83
+processing 262
+reject 262
+processing 479
+reject 479
+processing 70
+reject 70
+processing 86
+reject 86
+processing 365
+reject 365
+processing 796
+wait (constrained) 796
+processing 119
+take (other, this constrained) 796 to 76134
+reject 119
+processing 170
+reject 170
+processing 505
+reject 505
+processing 173
+reject 173
+processing 206
+reject 206
+processing 247
+wait (constrained) 247
+processing 507
+wait (constrained) 507
+processing 53
+take (other, this constrained) 507 to 77160
+reject 53
+processing 684
+reject 684
+processing 614
+reject 614
+processing 85
+reject 85
+processing 230
+reject 230
+processing 755
+reject 755
+processing 316
+wait (constrained) 316
+processing 31
+wait (constrained) 31
+processing 185
+take (other, this constrained) 31 to 78164
+reject 185
+processing 377
+reject 377
+processing 3
+reject 3
+processing 475
+reject 475
+processing 73
+reject 73
+processing 434
+reject 434
+processing 414
+reject 414
+processing 354
+reject 354
+processing 463
+reject 463
+processing 641
+wait (constrained) 641
+processing 215
+wait (constrained) 215
+processing 375
+wait (constrained) 375
+processing 26
+wait (constrained) 26
+processing 151
+wait (constrained) 151
+processing 439
+wait (constrained) 439
+processing 542
+wait (constrained) 542
+processing 226
+take (other, this constrained) 542 to 79202
+reject 226
+processing 670
+reject 670
+processing 351
+wait (constrained) 351
+processing 671
+take (other, this constrained) 351 to 80206
+reject 671
+processing 586
+reject 586
+processing 544
+reject 544
+processing 387
+reject 387
+processing 632
+reject 632
+processing 11
+reject 11
+processing 166
+reject 166
+processing 176
+reject 176
+processing 667
+wait (constrained) 667
+processing 50
+wait (constrained) 50
+processing 350
+take (other, this constrained) 50 to 81241
+reject 350
+processing 663
+reject 663
+processing 699
+reject 699
+processing 690
+reject 690
+processing 91
+reject 91
+processing 217
+reject 217
+processing 382
+wait (constrained) 382
+processing 768
+take (other, this constrained) 382 to 82262
+reject 768
+processing 220
+reject 220
+processing 324
+reject 324
+processing 187
+reject 187
+processing 290
+reject 290
+processing 44
+reject 44
+processing 492
+wait (constrained) 492
+processing 37
+wait (constrained) 37
+processing 63
+wait (constrained) 63
+processing 87
+take (other) 63 to 83289
+wait (after other) 87
+processing 432
+wait (constrained) 432
+processing 566
+take (other, this constrained) 432 to 84358
+reject 566
+processing 24
+reject 24
+processing 421
+reject 421
+processing 39
+reject 39
+processing 569
+reject 569
+processing 758
+reject 758
+processing 21
+reject 21
+processing 335
+wait (constrained) 335
+processing 61
+take (other, this constrained) 335 to 85467
+reject 61
+processing 399
+reject 399
+processing 68
+reject 68
+processing 590
+reject 590
+processing 659
+reject 659
+processing 74
+reject 74
+processing 271
+reject 271
+processing 406
+reject 406
+processing 739
+wait (constrained) 739
+processing 103
+wait (constrained) 103
+processing 501
+wait (constrained) 501
+processing 310
+take (other, this constrained) 501 to 86527
+reject 310
+processing 81
+reject 81
+processing 193
+reject 193
+processing 77
+reject 77
+processing 252
+reject 252
+processing 706
+reject 706
+processing 23
+reject 23
+processing 526
+reject 526
+processing 592
+reject 592
+processing 774
+wait (constrained) 774
+processing 135
+take (other, this constrained) 774 to 87550
+reject 135
+processing 363
+reject 363
+processing 231
+reject 231
+processing 510
+reject 510
+processing 121
+reject 121
+processing 468
+reject 468
+processing 198
+wait (constrained) 198
+processing 283
+wait (constrained) 283
+processing 410
+take (other, this constrained) 283 to 88554
+reject 410
+processing 783
+reject 783
+processing 417
+reject 417
+processing 188
+reject 188
+processing 709
+reject 709
+processing 6
+reject 6
+processing 55
+reject 55
+processing 221
+reject 221
+processing 339
+reject 339
+processing 546
+wait (constrained) 546
+processing 513
+wait (constrained) 513
+processing 200
+take (other, this constrained) 513 to 89691
+reject 200
+processing 371
+reject 371
+processing 392
+reject 392
+processing 407
+reject 407
+processing 732
+reject 732
+processing 633
+reject 633
+processing 691
+reject 691
+processing 222
+reject 222
+processing 703
+reject 703
+processing 321
+reject 321
+processing 232
+reject 232
+processing 617
+reject 617
+processing 577
+reject 577
+processing 519
+wait (constrained) 519
+processing 125
+take (other, this constrained) 519 to 90706
+reject 125
+processing 626
+reject 626
+processing 112
+reject 112
+processing 495
+reject 495
+processing 17
+reject 17
+processing 710
+reject 710
+processing 593
+reject 593
+processing 700
+wait (constrained) 700
+processing 487
+wait (constrained) 487
+processing 537
+take (other, this constrained) 487 to 91759
+reject 537
+processing 49
+reject 49
+processing 140
+reject 140
+processing 606
+reject 606
+processing 647
+reject 647
+processing 412
+reject 412
+processing 467
+reject 467
+processing 531
+wait (constrained) 531
+processing 676
+take (other, this constrained) 531 to 92774
+reject 676
+processing 268
+reject 268
+processing 362
+reject 362
+processing 579
+reject 579
+processing 105
+reject 105
+processing 742
+reject 742
+processing 219
+reject 219
+processing 331
+wait (constrained) 331
+processing 607
+wait (constrained) 607
+processing 196
+wait (constrained) 196
+processing 757
+take (other, this constrained) 196 to 93797
+reject 757
+processing 648
+reject 648
+processing 43
+reject 43
+processing 177
+reject 177
+processing 623
+reject 623
+processing 150
+reject 150
+processing 284
+reject 284
+processing 733
+wait (constrained) 733
+processing 668
+take (other, this constrained) 733 to 94852
+reject 668
+processing 330
+reject 330
+processing 413
+reject 413
+processing 765
+reject 765
+processing 72
+reject 72
+processing 581
+reject 581
+processing 752
+reject 752
+processing 428
+reject 428
+processing 110
+wait (constrained) 110
+processing 192
+wait (constrained) 192
+processing 156
+take (other, this constrained) 192 to 95898
+reject 156
+processing 210
+reject 210
+processing 695
+reject 695
+processing 240
+reject 240
+processing 547
+wait (constrained) 547
+processing 195
+wait (constrained) 195
+processing 643
+wait (constrained) 643
+processing 27
+wait (constrained) 27
+processing 538
+take (other, this constrained) 27 to 96980
+reject 538
+processing 524
+wait (constrained) 524
+processing 58
+wait (constrained) 58
+processing 481
+wait (constrained) 481
+processing 446
+take (other, this constrained) 481 to 98007
+reject 446
+processing 306
+reject 306
+processing 433
+reject 433
+processing 194
+reject 194
+processing 630
+wait (constrained) 630
+processing 615
+wait (constrained) 615
+processing 636
+take (other, this constrained) 615 to 99034
+reject 636
+processing 562
+reject 562
+processing 123
+reject 123
+processing 441
+reject 441
+processing 658
+wait (constrained) 658
+processing 356
+take (other, this constrained) 658 to 100149
+reject 356
+processing 657
+reject 657
+processing 391
+reject 391
+processing 600
+reject 600
+97

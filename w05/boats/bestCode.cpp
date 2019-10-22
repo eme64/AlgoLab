@@ -32,7 +32,7 @@
 // better: similar to scanline, but without min-heap, rather case distinction and min line.
 // experiment
 
-const bool EDEBUG = true;
+const bool EDEBUG = false;
 
 
 struct Event {
