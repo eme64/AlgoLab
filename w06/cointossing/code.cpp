@@ -62,16 +62,20 @@ void make_it_flow() {
     }
   }
   
+  bool failureInput = false;
   int missingPoints(0);
   for(int i=0;i<n;i++) {
     int p;
     std::cin >> p;
     if(p < points[i]) {
-      std::cout << "no" << std::endl;
-      return;
+      failureInput = true;
     }
     missingPoints+=p-points[i];
     adder.add_edge(i,v_target,p-points[i]);
+  }
+  if(failureInput) {
+    std::cout << "no" << std::endl;
+    return;
   }
   
   // Calculate flow from source to sink
@@ -79,8 +83,13 @@ void make_it_flow() {
   // - edge_capacity, edge_reverse (read access),
   // - edge_residual_capacity (read and write access).
   long flow = boost::push_relabel_max_flow(G, v_source, v_target);
-  std::cout << "The total flow is " << flow << "\n";
-  std::cout << "mG " << missingGames << " missingPoints " << missingPoints << std::endl;
+  if(flow==missingGames and missingGames == missingPoints) {
+    std::cout << "yes" << std::endl;
+  } else {
+    std::cout << "no" << std::endl;
+  }
+  //std::cout << "The total flow is " << flow << "\n";
+  //std::cout << "mG " << missingGames << " missingPoints " << missingPoints << std::endl;
 
   // Retrieve the capacity map and reverse capacity map
   //const auto c_map = boost::get(boost::edge_capacity, G);
