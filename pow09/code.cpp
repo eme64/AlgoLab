@@ -35,6 +35,21 @@ long to_ceil(const T& t) {
    return res;
 }
 
+// Idea:
+//
+// separate into
+//  max bounds per new poster from old posters - precomupte min bound
+//  mutual bounds of new posters - n^2 in lp
+
+struct Bound { // struct to easily find minimum Bound
+   long dist;
+   long side; // h or w value
+   Bound(int d, int s) : dist(d), side(s) {};
+};
+bool operator < (const Bound& e1, const Bound& e2) {
+   return (e1.dist*e2.side < e2.dist*e1.side);// predicate?
+}
+
 int main() {
    std::ios_base::sync_with_stdio(false);
    
@@ -46,55 +61,66 @@ int main() {
       std::cin >> n >> m >> h >> w;
       
       
-      std::vector<Element> elements;
-      elements.reserve(n+m);
+      std::vector<Element> oldElements;
+      std::vector<Element> newElements;
+      oldElements.reserve(m);
+      newElements.reserve(n);
 
       for(int i=0; i<n; i++) {
          int x,y;
 	 std::cin >> x >> y;
-	 elements.push_back(Element(i,x*2,y*2));
+	 newElements.push_back(Element(i,x*2,y*2));
       }
 
       for(int i=0; i<m; i++) {
          int x,y;
 	 std::cin >> x >> y;
-	 elements.push_back(Element(-1,x*2,y*2));
+	 oldElements.push_back(Element(-1,x*2,y*2));
       }
 
-      std::sort(elements.begin(), elements.end());
+      //std::sort(elements.begin(), elements.end());
       
       Program lp (CGAL::SMALLER, true, 1, false, 0);
        
-      const int imax = elements.size()-1;
+      //const int imax = elements.size()-1;
       int eqNum = 0;
 
-      for(int i=0; i<imax; i++) {
-         const Element& e1 = elements[i];
-         const Element& e2 = elements[i+1];
+      for(int i=0;i<n;i++) {
+         const Element& en = newElements[i];
          
-	 if(e1.variable == -1 && e2.variable == -1) {
-            // ignore
-	 } else if(e1.variable >= 0 && e2.variable >= 0) {
-	    // mutual limitation
-	    int dist = std::abs(e1.x - e2.x);
-	    lp.set_a(e1.variable, eqNum, w);
-	    lp.set_a(e2.variable, eqNum, w);
-            lp.set_b(eqNum, dist);
-	    eqNum++;
-	 } else if(e1.variable >= 0 && e2.variable == -1) {
-            // one-sided
-	    int dist = std::abs(e1.x - e2.x) - w;
-	    lp.set_a(e1.variable, eqNum, w);
-            lp.set_b(eqNum, dist);
-	    eqNum++;
-	 } else if(e1.variable == -1 && e2.variable >= 0) {
-            // one-sided
-	    int dist = std::abs(e1.x - e2.x) - w;
-	    lp.set_a(e2.variable, eqNum, w);
-            lp.set_b(eqNum, dist);
-	    eqNum++;
-	 } else {
-	    assert(false);
+	 Bound bound = Bound(1 << 25, -1);
+
+	 for(int j=0;j<m;j++) {
+	    const Element& eo = oldElements[j];
+            long dx = std::abs(en.x - eo.x);
+            long dy = std::abs(en.y - eo.y);
+
+	    if(dx*h <= dy*w) {// predicate?
+	       bound = std::min( bound, Bound(std::abs(dy-h),h));
+	    } else {
+	       bound = std::min( bound, Bound(std::abs(dx-w),w));
+	    }
+	 }
+	 lp.set_a(en.variable, eqNum, bound.side); // set upper bound on variable for old
+         lp.set_b(eqNum, bound.dist);
+         eqNum++;
+      
+         for(int j=0;j<i;j++) { // for each other new mutual bounds
+	    const Element& eo = newElements[j];
+            
+	    long dx = std::abs(en.x - eo.x);
+            long dy = std::abs(en.y - eo.y);
+
+	    if(dx*h <= dy*w) {// predicate?
+	       bound = Bound(dy,h);
+
+	    } else {
+	       bound = Bound(dx,w);
+	    }
+            lp.set_a(en.variable, eqNum, bound.side);
+            lp.set_a(eo.variable, eqNum, bound.side);
+            lp.set_b(eqNum, bound.dist);
+            eqNum++;
 	 }
       }
       
