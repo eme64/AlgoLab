@@ -15,81 +15,44 @@
 
 enum Kind : char {
    Begin = 0,
-   End = 2,
    Check = 1,
+   End = 2,
 };
 
 struct Element {
-   int index;
    int position;
    Kind kind;
-   Element(int index, int position, Kind kind) : index(index), position(position), kind(kind) {};
+   Element(int index, int position, Kind kind) : position(position), kind(kind) {};
 };
 
 bool operator < (const Element& e1, const Element& e2) {
      return e1.position < e2.position or (e1.position == e2.position and e1.kind < e2.kind);
 }
 
-bool overlap(int a, int b, int c, int d) {
-   if(a<=b) {
-      if((a<=c and c<=b) or (a<=d and d<=b)) {return true;} // interlocked
-      if(c<a and b<d) {return true;} // overbridged
-      return false;
-   } else {
-      if((c>=a or c<=b) or (d>=a or d<=b)) {return true;} // interlocked
-      if(d<c) {return true;} // overbridged
-      return false;
-   }
+struct Segment {
+   int begin;
+   int end;
+   Segment(int begin, int end) : begin(begin), end(end) {};
+};
+
+bool operator < (const Segment& e1, const Segment& e2) {
+     return e1.end < e2.end;
 }
 
-
-void greedy(int n, int m, int start, int finish, std::vector<Element> &elements, int &cnt, std::vector<int> begin) {
-   // find start/finish:
-   
-   int boundary = start;
-   for(auto e : elements) {
-      if(e.kind == End and e.position > start) {
-         int a = begin[e.index]%m;
-         int b = e.position;
-         if(not overlap(a,b,finish,boundary)) {
-            // take:
-            cnt++;
-            boundary = b;
-         }
+int greedy(std::vector<Segment> &segments, int lower, int upper) {
+   int cnt = 0;
+   for(Segment &s : segments) {
+      if(lower <= s.begin && s.end <= upper) {
+         cnt++;
+	 lower = s.end+1;
       }
    }
-   for(auto e : elements) {
-      if(e.kind == End and e.position < finish) {
-         int a = begin[e.index]%m;
-         int b = e.position;
-         if(not overlap(a,b,finish,boundary)) {
-            // take:
-            cnt++;
-            boundary = b;
-         }
-      }
-   }
-   
-   
+   return cnt;
 }
 
 int main() {
    std::ios_base::sync_with_stdio(false);
 
-   assert(not overlap(1,1,2,2));
-   assert(not overlap(3,3,2,2));
-   assert(not overlap(3,1,2,2));
-   assert(    overlap(1,0,2,2));
-   assert(    overlap(1,2,2,2));
-   assert(    overlap(2,3,2,2));
-   assert(    overlap(5,2,2,2));
-   assert(    overlap(5,2,2,4));
-   
-   assert(not overlap(1,3,4,6));
-   assert(    overlap(1,5,4,6));
-   assert(    overlap(1,7,4,6));
-   assert(    overlap(1,0,4,6));
-   
    int t(0);
    std::cin >> t;
    for(int tt=0; tt<t; tt++) {
@@ -97,79 +60,69 @@ int main() {
       std::cin >> n >> m;
       
       std::vector<Element> elements;
-      elements.reserve(3*n);
+      elements.reserve(4*n);
       std::vector<int> begin(n);
       std::vector<int> end(n);
       
+      int numActive(0);
       for(int i=0;i<n;i++) {
          std::cin >> begin[i] >> end[i];
+	 begin[i] = begin[i]%m;
+	 end[i] = end[i]%m;
+         elements.push_back(Element(i,(begin[i]-1+m)%m,Check));
          elements.push_back(Element(i,begin[i]%m,Begin));
+         elements.push_back(Element(i,begin[i]%m,Check));
          elements.push_back(Element(i,end[i]%m,End));
-         elements.push_back(Element(i,(end[i]+1)%m,Check));
+         if(begin[i]>end[i]) {
+	     numActive++;
+	 }
       }
       std::sort(elements.begin(),elements.end());
-      
-      int numActive(0);
-      std::vector<bool> active(n,false);
-      // first circle scan: warmup:
-      for(auto e : elements) {
+     
+      int minPos = -1;
+      int minActive = n+1;
+
+      for(Element &e : elements) {
          if(e.kind == Begin) {
-            active[e.index] = true;
-            numActive++;
-         } else if(e.kind == End) {
-            if(active[e.index]==true) {numActive--;}
-            active[e.index] = false;
-         } else {
-            // Check: not yet
-         }
+	    numActive++;
+	 } else if(e.kind == End) {
+	    numActive--;
+	 } else {
+            if(minActive > numActive) {
+	       minActive = numActive;
+	       minPos = e.position;
+	    }
+	 }
       }
       
-      std::vector<int> startSet;
-      startSet.reserve(10);
-      int startPosition(-1);
-      // second round: find minimum
-      for(auto e : elements) {
-         if(e.kind == Begin) {
-            assert(active[e.index]==false);
-            active[e.index] = true;
-            numActive++;
-         } else if(e.kind == End) {
-            assert(active[e.index]==true);
-            active[e.index] = false;
-            numActive--;
-         } else {
-            // Check:
-            if(numActive <= 10) {
-               if(startSet.size()==0) {
-                  startPosition = e.position;
-                  for(int i=0;i<n;i++) {
-                     if(active[i]) {startSet.push_back(i);}
-                  }
-               }
-            }
-         }
-      }
-      assert(startPosition != -1);
+      //std::cout << minActive << " " << minPos << std::endl;
       
-      if(startSet.size()==0) {
-         int cnt = 0;
-         int start = startPosition;
-         int finish = startPosition;
-         greedy(n,m,start,finish,elements,cnt,begin);
-         std::cout << cnt << std::endl;
-      } else {
-         int maxCnt(0);
-         for(int i=0;i<startSet.size(); i++) {
-            int cnt = 1;
-            int start = end[startSet[i]]%m;
-            int finish = begin[startSet[i]]%m;
-            greedy(n,m,start,finish,elements,cnt,begin);
-            maxCnt = std::max(maxCnt,cnt);
-         }
-         std::cout << maxCnt << std::endl;
+      // now input segments, sorted by end position:
+      std::vector<int> anchors;
+      std::vector<Segment> segments;
+      segments.reserve(n);
+      for(int i=0;i<n;i++) {
+         int a = (begin[i]+m-minPos)%m;
+         int b = (end[i]+m-minPos)%m;
+	 begin[i] = a;
+	 end[i] = b;
+	 if(b<a or a==0) {
+	    //std::cout << "active: " << i << std::endl;
+	    anchors.push_back(i);
+	 } else {
+            segments.push_back(Segment(a,b));
+	 }
+      }
+      std::sort(segments.begin(),segments.end());
+      
+      int cnt = 0;
+      cnt = greedy(segments, 0, m-1);
+      
+      for(int &i : anchors) {
+         cnt = std::max(cnt, greedy(segments, end[i]+1, begin[i]-1)+1);
       }
       
-      std::cout << startSet.size() << " " << startPosition << std::endl;
+      std::cout << cnt << std::endl;
    }
 }
 
