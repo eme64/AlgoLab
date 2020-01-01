@@ -41,10 +41,10 @@ int main() {
       std::cin >> l >> b >> r >> t;
 
       std::vector<K::Point_2> pts;
-      pts.reserve(n+2);
+      pts.reserve(n+4);
       std::map<K::Point_2,int> ptoi;
       std::vector<K::FT> mind;
-      mind.reserve(n+2);
+      mind.reserve(n+4);
       for(int i=0; i<n; i++) {
          int x,y;
 	 std::cin >> x >> y;
@@ -55,18 +55,32 @@ int main() {
 	 K::FT d = 2*std::min(x-l, std::min(r-x, std::min(y-b, t-y)));
 	 mind.push_back(d*d);
       }
+      long big = 1 << 25;
       {
-         K::Point_2 p(l,b);
+         K::Point_2 p(l-big,b-big);
 	 pts.push_back(p);
 	 ptoi[p] = n;
 	 mind.push_back(0);
       }
       {
-         K::Point_2 p(l,t);
+         K::Point_2 p(l-big,t+big);
 	 pts.push_back(p);
 	 ptoi[p] = n+1;
 	 mind.push_back(0);
       }
+      {
+         K::Point_2 p(r+big,b-big);
+	 pts.push_back(p);
+	 ptoi[p] = n+2;
+	 mind.push_back(0);
+      }
+      {
+         K::Point_2 p(r+big,t+big);
+	 pts.push_back(p);
+	 ptoi[p] = n+3;
+	 mind.push_back(0);
+      }
+
 
       Triangulation tt;
       tt.insert(pts.begin(), pts.end());
@@ -89,7 +103,7 @@ int main() {
 	 mind[i2] = std::min(mind[i2], std::min(d1,d2));
       }
 
-      std::sort(mind.begin(), mind.end()-2);
+      std::sort(mind.begin(), mind.end()-4);
 
       std::cout << dtot(mind[0]) << " "
 	        << dtot(mind[n/2]) << " "
