@@ -15,13 +15,32 @@ typedef Triangulation::Finite_faces_iterator Face_iterator;
 typedef Triangulation::All_faces_iterator All_face_iterator;
 typedef Triangulation::Face_handle Face;
 
+struct InvLong {
+   long value;
+   InvLong() {}
+   InvLong(long v) : value(v) {}
+};
+bool operator < (const InvLong& e1, const InvLong& e2) { return (e1.value > e2.value); }
+bool operator > (const InvLong& e1, const InvLong& e2) { return (e1.value < e2.value); }
+bool operator <= (const InvLong& e1, const InvLong& e2) { return (e1.value >= e2.value); }
+bool operator >= (const InvLong& e1, const InvLong& e2) { return (e1.value <= e2.value); }
+
+struct Edge {
+   int u,v;
+   Edge(int u, int v) : u(u),v(v) {}
+};
+bool operator < (const Edge& e1, const Edge& e2) {
+   return (e1.u < e2.u or (e1.u == e2.u and e1.v < e2.v));
+}
 
 #include <boost/graph/kruskal_min_spanning_tree.hpp>
 #include <boost/graph/adjacency_list.hpp>
 typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
-boost::no_property, boost::property<boost::edge_weight_t, long> > weighted_graph;
+boost::no_property, boost::property<boost::edge_weight_t, InvLong> > weighted_graph;
 typedef boost::graph_traits<weighted_graph>::edge_descriptor edge_desc;
 typedef boost::property_map<weighted_graph, boost::edge_weight_t>::type weight_map;
+typedef boost::graph_traits<weighted_graph>::out_edge_iterator out_edge_it;
+
 
 int main() {
    std::ios_base::sync_with_stdio(false);
@@ -51,14 +70,17 @@ int main() {
       
       // label faces:
       long big = 1l << 60;
-      int cnt = 0;
+      int cnt = 1;
       for (All_face_iterator f = t.all_faces_begin(); f != t.all_faces_end(); ++f) {
          //std::cout << t.triangle(f) << "\n";
-         std::cout << "infinite: " << cnt << " "<< t.is_infinite(f) << std::endl;
-	 f->info() = cnt++;
+         if(t.is_infinite(f)) {
+	    f->info() = big;
+	 } else {
+	    f->info() = cnt++;
+	 }
       }
       
-      std::cout << "cnt " << cnt << std::endl;
+      //std::cout << "cnt " << cnt << std::endl;
       weighted_graph G(cnt);
       weight_map weights = boost::get(boost::edge_weight, G);
       edge_desc e;
@@ -66,7 +88,7 @@ int main() {
       std::vector<long> critical(cnt,0);
       for (All_face_iterator f = t.all_faces_begin(); f != t.all_faces_end(); ++f) {
          int i = f->info();
-         std::cout << t.triangle(f) << "\n";
+         //std::cout << t.triangle(f) << "\n";
 	 if(t.is_infinite(f)) {
             critical[i] = big;
 	 } else {
@@ -74,29 +96,61 @@ int main() {
 	    for(int nn=0; nn<3; nn++) {
 	       Face nei = f->neighbor(nn);
 	       int ni = nei->info();
-	       K::Point_2 &p0 = f->vertex(nn+1 % 3)->point();
-	       K::Point_2 &p1 = f->vertex(nn+2 % 3)->point();
+	       K::Point_2 &p0 = f->vertex((nn+1) % 3)->point();
+	       K::Point_2 &p1 = f->vertex((nn+2) % 3)->point();
 	       int i0 = ptoi[p0];
 	       int i1 = ptoi[p1];
 	       long dx = xx[i0] - xx[i1];
 	       long dy = yy[i0] - yy[i1];
 	       long dd = dx*dx+dy*dy;
-	       //std::cout << "insert " << i << " " << ni << std::endl;
-	       //std::cout << "insert " << i << " " << nei->info() << std::endl;
-	       //e = boost::add_edge(1, 3, G).first;
-	       //std::cout << e << std::endl;
-	       //std::cout << "insert " << i << " " << ni << std::endl;
-	       //weights[e]=dd;
-	       //std::cout << "hello again" << std::endl;
+	       //std::cout << "insert " << i << " " << ni << " " << dd << std::endl;
+	       e = boost::add_edge(i, ni, G).first;
+	       weights[e]=InvLong(dd);
 	    }
 	 }
       }
+      
+      weighted_graph G2(cnt);
+      std::map<Edge,long> emap;
 
       std::vector<edge_desc> mst;
       boost::kruskal_minimum_spanning_tree(G, std::back_inserter(mst));
       for (std::vector<edge_desc>::iterator it = mst.begin(); it != mst.end(); ++it) {
-         std::cout << boost::source(*it, G) << " " << boost::target(*it, G) << "\n";
+         int u = boost::source(*it, G);
+	 int v = boost::target(*it, G);
+	 //std::cout << boost::source(*it, G) << " " << boost::target(*it, G) << "\n";
+	 e = boost::add_edge(u,v, G2).first;
+	 long dd = weights[*it].value;
+	 //std::cout << "mst: " << u << " " << v << " " << dd << std::endl;
+	 emap[Edge(u,v)] = dd;
+	 emap[Edge(v,u)] = dd;
       }
+
+      std::vector<bool> visited(cnt,false);
+      std::vector<int> queue;
+      queue.reserve(n);
+      int qIndex = 0;
+      queue.push_back(0);
+      visited[0] = true;
+      
+      while(queue.size() > qIndex) {
+         int v = queue[qIndex++];
+         
+         out_edge_it oe_beg, oe_end;
+	 for (boost::tie(oe_beg, oe_end) = boost::out_edges(v, G2); oe_beg != oe_end; ++oe_beg) {
+            assert(boost::source(*oe_beg, G) == v);
+	    int u = boost::target(*oe_beg, G);
+            //std::cout << v << " " << u << " " << emap[Edge(u,v)] << std::endl;
+
+	    if(!visited[u]) {
+	       visited[u] = true;
+	       queue.push_back(u);
+               critical[u] = std::min(emap[Edge(u,v)], critical[v]);
+	       //std::cout << "set: " << u << " " << v << " " << emap[Edge(u,v)] << " " << critical[v] << std::endl;
+	    }
+         }
+      }
+
 
       // queries:
       std::cin >> m;
@@ -106,29 +160,48 @@ int main() {
 	 std::cin >> x >> y >> d;
 	 K::Point_2 q(x,y);
 	 Face f = t.locate(q);
-	 std::cout << "q" << i << " " << f->info() << std::endl;
+	 //std::cout << "q" << i << " " << f->info() << std::endl;
 
 	 // check that not too close to any point:
 	 bool canStart = true;
 	 for(int v=0; v<3; v++) {
 	    auto vv = f->vertex(v);
 	    if(!t.is_infinite(vv)) {
-	       if(CGAL::squared_distance(vv->point(),q) < d) {canStart = false;}
+	       if(CGAL::squared_distance(vv->point(),q) < d) {
+	          canStart = false;
+	          //std::cout << "   " << vv->point() << " " << CGAL::squared_distance(vv->point(),q) << std::endl;
+	       }
 	    } else {
-	       std::cout << "inf-pass" << std::endl;
+	       //std::cout << "inf-pass" << std::endl;
 	    }
 	 }
-	 std::cout << "start " << canStart << std::endl;
-	 if(!canStart) {continue;}
+	 //std::cout << "start " << canStart << std::endl;
+	 if(!canStart) {
+	    std::cout << "n";
+	    //std::cout << "n start " << x << " " << y << " " << d << std::endl;
+            continue;
+	 }
+
+	 if(CGAL::squared_distance(t.nearest_vertex(q)->point(),q) < d) {
+	    std::cout << "n";
+	    //std::cout << "n point " << x << " " << y << " " << d << std::endl;
+            continue;
+	 }
 
 	 // check if path out exists:
 	 int ii = f->info();
-	 if(critical[ii]>=d) {
-	    std::cout << "y" << std::endl;
+	 //std::cout << "critical: " << critical[ii] << " " << d << std::endl;
+	 if(critical[ii]>=d*4) {
+	    std::cout << "y";
+	    //std::cout << "y " << x << " " << y << " " << d << " " << critical[ii] << " " << t.is_infinite(f) << std::endl;
+	    //if(t.is_infinite(f)) {
+	    //   std::cout << "    "<< t.triangle(f) << std::endl;
+	    //}
 	 } else {
-	    std::cout << "n" << std::endl;
+	    std::cout << "n";
+	    //std::cout << "n " << x << " " << y << " " << d << std::endl;
 	 }
       }
-      std::cout << "hello" << std::endl;
+      std::cout << std::endl;
    }
 }
