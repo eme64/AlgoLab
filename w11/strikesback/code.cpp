@@ -11,6 +11,7 @@ typedef Triangulation::Finite_faces_iterator Face_iterator;
 #include <CGAL/QP_models.h>
 #include <CGAL/QP_functions.h>
 #include <CGAL/Gmpz.h>
+#include <CGAL/Gmpq.h>
 // choose input type (input coefficients must fit)
 typedef CGAL::Gmpq IT;
 // choose exact type for solver (CGAL::Gmpz or CGAL::Gmpq)
@@ -72,6 +73,10 @@ struct Test {
       
       bool infeasible = false;
       if(b > 0) {
+	 std::vector<Point> newS;
+	 std::vector<long> newSD;
+	 newS.reserve(s);
+	 newSD.reserve(s);
          for(int i=0; i<s; i++){
             const auto &ss = shooting[i];
             const auto &v = t.nearest_vertex(K::Point_2(ss.x,ss.y));
@@ -79,13 +84,21 @@ struct Test {
                Point &p = ptop[v->point()];
                long dd = ss.d2(p);
 	       if(dd == 0) {
-	          infeasible = true;
+	          //infeasible = true;
+		  //std::cout << i << " distance 0" << std::endl;
+	       } else {
+	          newS.push_back(ss);
+		  newSD.push_back(dd);
 	       }
                sRadius2[i] = dd;
                //std::cout << i << " " << dd << std::endl;
             }
          }
+	 std::swap(newS,shooting);
+	 std::swap(newSD,sRadius2);
+	 s = shooting.size();
       }
+      //std::cout << s << std::endl;
 
       // set up lp.
       // variables: energy levels per shooting
@@ -102,6 +115,7 @@ struct Test {
       for(int j=0; j<a; j++) {
 	 const auto &aa = asteroid[j];
          const int density = aDensity[j];
+	 bool hasContribution = false;
          for(int i=0; i<s; i++) {
             const auto &ss = shooting[i];
             const long r2 = sRadius2[i];
@@ -109,6 +123,7 @@ struct Test {
 	    if(r2 > dd) {// radius just smaller than closest b-hunter
                IT div = IT(1) / IT(std::max(1l, dd));
                lp.set_a(i,j,-div);
+	       hasContribution = true;
 	    }
 	 }
          lp.set_b(j,-density);
@@ -120,10 +135,11 @@ struct Test {
       lp.set_b(s,e); // energy budget
       lp.set_c0(0);//bogus cost
 
-      Solution s = CGAL::solve_linear_program(lp, ET());
-      assert(s.solves_linear_program(lp));
+      //Solution sol = CGAL::solve_linear_program(lp, ET());
+      Solution sol = CGAL::solve_nonnegative_linear_program(lp, ET());
+      assert(sol.solves_linear_program(lp));
 
-      if (s.is_infeasible() or infeasible) {
+      if (sol.is_infeasible() or infeasible or s==0) {
          std::cout << "n" << std::endl;
       } else {
          std::cout << "y" << std::endl;
