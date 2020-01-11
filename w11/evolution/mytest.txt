@@ -1,0 +1,28 @@
+1
+12 2
+a 100
+b 99
+c 98
+d 97
+e 96
+f 95
+g 94
+h 93
+i 92
+j 91
+k 90
+l 89
+b a
+c b
+d c
+e d
+f e
+g f
+h g
+i h
+j i
+k j
+l k
+l 98
+k 98
+
