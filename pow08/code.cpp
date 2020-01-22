@@ -1,134 +1,133 @@
-// idea:
-// possible value states: 2*100*5000 = 10^6
-// can we check feasibility?
-// traverse table somehow?
+// flow algorithm:
+// source flows to zone with capacity ci -> can enough flow?
+// from job to dst there is pj flow, more cannot be won.
+// from zone to job, there is an inf edge if job requires zone.
+//
+// question: is src-zone saturated? = can zone be payed for?
 
 #include <iostream>
 #include <vector>
 #include <cassert>
 
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/push_relabel_max_flow.hpp>
+
+// Graph Type with nested interior edge properties for flow algorithms
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS, boost::directedS> traits;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+   boost::property<boost::edge_capacity_t, long,
+   boost::property<boost::edge_residual_capacity_t, long,
+   boost::property<boost::edge_reverse_t, traits::edge_descriptor>>>> graph;
+typedef traits::vertex_descriptor vertex_desc;
+typedef traits::edge_descriptor edge_desc;
+
+class edge_adder {
+   graph &G;
+public:
+   explicit edge_adder(graph &G) : G(G) {}
+   edge_desc add_edge(int from, int to, long capacity) {
+      auto c_map = boost::get(boost::edge_capacity, G);
+      auto r_map = boost::get(boost::edge_reverse, G);
+      const auto e = boost::add_edge(from, to, G).first;
+      const auto rev_e = boost::add_edge(to, from, G).first;
+      c_map[e] = capacity;
+      c_map[rev_e] = 0; // reverse edge has no capacity!
+      r_map[e] = rev_e;
+      r_map[rev_e] = e;
+      return e;
+   }
+};
+
+
 struct Canton {
-   std::vector<bool> jobVsZone;
    std::vector<int> c;
    std::vector<int> p;
    int z,j;
+   std::vector<bool> M;
+
+   std::vector<edge_desc> zoneEdge;
    
-   enum Decision : char {
-      Yes = 0,
-      No = 1,
-      Unknown = 2,
-   };
+   int ret;
 
    Canton() {
       std::cin >> z >> j;
 
-      //std::cout << "# z: " << z << " j: " << j << std::endl;
+      graph G(z+j+2);
+      edge_adder adder(G);
+      int src = z+j;
+      int dst = z+j+1;
+      
       c.resize(z);
+      zoneEdge.reserve(z);
+      edge_desc e;
       for(int i=0; i<z; i++) {
 	 std::cin >> c[i];
+	 e = adder.add_edge(src,i, c[i]);
+	 zoneEdge.push_back(e);
       }
 
       p.resize(j);
       for(int i=0; i<j; i++) {
 	 std::cin >> p[i];
+	 adder.add_edge(i+z,dst, p[i]);
       }
       
-      jobVsZone.resize(z*j,false);
+      M.resize(z*j,false);
       for(int i=0; i<j; i++) {
          int ni;
 	 std::cin >> ni;
 	 for(int n=0; n<ni; n++) {
 	    int zz;
 	    std::cin >> zz;
-	    jobVsZone[i*z+zz] = true;
+	    adder.add_edge(zz, i+z, (1<<30));
+	    M[i*j + zz] = true;
 	 }
       }
-   }
 
-   int run() {
-      int costs = 0;
-      int profits = 0;
-      for(int &pp : p) {profits+=pp;}
-      std::vector<bool> jobs(j,true);
-      std::vector<Decision> decision(z,Unknown);
-      std::vector<int> numJobs(z,0);
-      for(int zz=0; zz<z; zz++) {
-         for(int jj=0; jj<j; jj++) {
-	    if(jobVsZone[jj*z+zz]) {numJobs[zz]++;}
-	 }
-      }
-      
+      long flow = boost::push_relabel_max_flow(G, src, dst);
+      const auto c_map = boost::get(boost::edge_capacity, G);
+      const auto rc_map = boost::get(boost::edge_residual_capacity, G);
 
-      return go(costs, profits, jobs, decision, numJobs);
-   }
+      std::vector<bool> takeZone(z,false);
+      for(int i=0; i<z; i++) {
+         e = zoneEdge[i];
+	 long ff = c_map[e] - rc_map[e];
+	 if(ff == c[i]) {takeZone[i] = true;}
+      }
 
-   int go(int costs, int profits,
-          std::vector<bool> &jobs,
-	  std::vector<Decision> &decision,
-	  std::vector<int> &numJobs) {
-      int maxJobs = 0;
-      int maxZone = -1;
-      for(int zz=0; zz<z; zz++) {
-	 if(decision[zz]!=Unknown) {continue;}
-	 if(numJobs[zz]==0) {decision[zz]=No;} // prune
-         if(numJobs[zz]>=maxJobs) {maxJobs = numJobs[zz]; maxZone = zz;}
-      }
-      if(maxJobs==0) {
-	 //std::cout << "no jobs left" << std::endl;
-         return profits-costs;// terminate if no jobs left
-      }
-      if(maxJobs==1) {
-	 //std::cout << "maxJobs==1" << std::endl;
-         // handle individually:
-	 std::vector<int> jobCosts(j,0);
+      long profit = 0;
+      long cost = 0;
+      std::vector<bool> reallyTakeZone(z,false);
+      for(int i=0; i<j; i++) {
+         bool take = true;
 	 for(int zz=0; zz<z; zz++) {
-            if(decision[zz]!=Unknown) {continue;}
-	    assert(numJobs[zz]==1);
-            int jjj = 0;
-	    while(!jobs[jjj] || !jobVsZone[jjj*z+zz]) {jjj++;}
-            jobCosts[jjj]+= c[zz];
-	    //std::cout << "zone " << zz << " for " << jjj << std::endl;
+	    if(M[i*j + zz] and not takeZone[zz]) {take = false;}
 	 }
-	 for(int jjj=0; jjj<j; jjj++) {
-	    if(jobs[jjj]) {
-	       if(jobCosts[jjj]<p[jjj]) {
-	          costs+=jobCosts[jjj];
-		  //std::cout << "take " << jjj << std::endl;
-	       } else {
-	          profits-=p[jjj];
-		  //std::cout << "reject " << jjj << std::endl;
+
+	 if(take) {
+            profit+=p[i];
+	    std::cout << "take j " << i << std::endl;
+	    for(int zz=0; zz<z; zz++) {
+	       if(M[i*j + zz]) {
+	          if(not reallyTakeZone[zz]) {
+		     reallyTakeZone[zz] = true;
+		     cost += c[zz];
+	             std::cout << "take z " << zz << std::endl;
+		  }
 	       }
 	    }
 	 }
-	 return profits-costs;
       }
+     
+      std::cout << "f: " << flow << std::endl;
+      std::cout << "p: " << profit << " c: " << cost << std::endl; 
 
-      //std::cout << "# " << maxJobs << " " << maxZone << std::endl;
-      // take zone:
-      std::vector<Decision> decision1(z);
-      for(int zz=0; zz<z; zz++) {decision1[zz] = decision[zz];}
-      assert(decision1[maxZone]==Unknown);
-      decision1[maxZone] = Yes;
-      int c1 = go(costs+c[maxZone],profits,jobs,decision1,numJobs);
-      
-      // reject zone:
-      decision1[maxZone] = No;
-      int profit2 = profits;
-      std::vector<bool> jobs2(j);
-      std::vector<int> numJobs2(z);
-      for(int zz=0; zz<z; zz++) {numJobs2[zz] = numJobs[zz];}
-      for(int jjj=0; jjj<j; jjj++) {
-	 jobs2[jjj] = jobs[jjj];
-         if(jobs[jjj] && jobVsZone[jjj*z+maxZone]) {
-	    // job was active and is now removed
-	    jobs2[jjj] = false;
-            profit2-=p[jjj];
-            for(int zz=0; zz<z; zz++) {numJobs2[zz]-=(jobVsZone[jjj*z+zz]);}
-	 }
-      }
-      int c2 = go(costs, profit2, jobs2, decision1, numJobs2);
-      //std::cout << "c1: " << c1 << " c2: " << c2 << std::endl;
-      return std::max(c1,c2);
+      ret = profit-cost;
+      assert(ret>=0);
+   }
+
+   int run() {
+      return ret;
    }
 };
 
