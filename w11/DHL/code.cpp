@@ -33,14 +33,34 @@ struct Test {
       for(int x=1; x<=n; x++) { // stack pos a
          for(int y=1; y<=n; y++) { // stack pos b
             long val = (pa[x]-pa[0]) * (pb[y]-pb[0]);// if take all now
-	    for(int xx=1; xx<x; xx++) {
+	    
+	    if(x>1) {
+	       int xx = x-1;
 	       for(int yy=1; yy<y; yy++) {
 	          long last = T[xx*(n+1) + yy];// rest of turns
-		  long now = (pa[x]-pa[xx]) * (pb[y]-pb[yy]);
-		  long total = last + now;
-		  val = std::min(val, total);
+	          long now = (pa[x]-pa[xx]) * (pb[y]-pb[yy]);
+	          long total = last + now;
+	          val = std::min(val, total);
 	       }
 	    }
+	    if(y>1) {
+	       int yy = y-1;
+	       for(int xx=1; xx<x; xx++) {
+	          long last = T[xx*(n+1) + yy];// rest of turns
+	          long now = (pa[x]-pa[xx]) * (pb[y]-pb[yy]);
+	          long total = last + now;
+	          val = std::min(val, total);
+	       }
+	    }
+	    
+	    //for(int xx=1; xx<x; xx++) {
+	    //   for(int yy=1; yy<y; yy++) {
+	    //      long last = T[xx*(n+1) + yy];// rest of turns
+	    //      long now = (pa[x]-pa[xx]) * (pb[y]-pb[yy]);
+	    //      long total = last + now;
+	    //      val = std::min(val, total);
+	    //   }
+	    //}
 	    T[x*(n+1) + y] = val;
 	    //std::cout << " " << val;
          }
