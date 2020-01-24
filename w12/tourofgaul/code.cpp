@@ -68,12 +68,15 @@ int main() {
 
       std::vector<int> c(n-1);
       int maxC = 0;
+      int sumC = 0;
       for(int i=0; i<n-1; i++) {
          std::cin >> c[i];
 	 maxC = std::max(maxC, c[i]);
+	 sumC += c[i];
       }
 
-      std::vector<int> link(128*n);
+      const int maxSig = 128;
+      std::vector<int> link(maxSig*n);
       
       for(int i=0; i<m; i++) {
          int a,b,d;
@@ -84,26 +87,26 @@ int main() {
 	 if(it == edge.end()) {edge[ee] = 0;}
 	 edge[ee]++;
 
-	 if(link[128*a + d-1] == 0) {
-	    link[128*a + d-1] = id++;
+	 if(link[maxSig*a + d-1] == 0) {
+	    link[maxSig*a + d-1] = id++;
 	 }
       }
 
-      int totalIn = maxC;
       graph G(id);
       edge_adder adder(G);
 
 
+      int totalIn = c[0];
       adder.add_edge(src, node[0], c[0], 0);
       adder.add_edge(node[n-1], dst, c[n-2], 0);
       for(int i=0; i<n-1; i++) {
-	 adder.add_edge(node[i], node[i+1], c[i], 0);
+	 adder.add_edge(node[i], node[i+1], c[i], maxSig);
       }
       for(int i=1; i<n-1; i++) {
 	 int diff = c[i] - c[i-1];
 	 if(diff > 0) {
 	    // add some flow:
-            adder.add_edge(src, node[i+1], diff, 0);
+            adder.add_edge(src, node[i], diff, 0);
             totalIn+=diff;
 	 } else {
 	    adder.add_edge(node[i], dst, -diff, 0);
@@ -111,10 +114,11 @@ int main() {
       }
       
       for(int i=0; i<n; i++) {
-         for(int d=0; d<128; d++) {
-            int l=link[128*i + d];
+         for(int d=0; d<maxSig; d++) {
+            int l=link[maxSig*i + d];
 	    if(l>0) {
-	       adder.add_edge(node[i],l, maxC, -(d+1));
+	       //adder.add_edge(node[i],l, maxC, -(d+1));
+	       adder.add_edge(node[i],l, maxC, 0);
 	    }
 	 }
       }
@@ -123,19 +127,31 @@ int main() {
          const Edge &ee = it.first;
 	 int cap = it.second;
 
-	 int l = link[128*ee.u + ee.d-1];
+	 int l = link[maxSig*ee.u + ee.d-1];
 	 assert(l!=0);
 	 //std::cout << "place: " << ee.u << " " << ee.v << " " << ee.d << std::endl;
 	 //std::cout << " " << cap << std::endl;
-	 adder.add_edge(l, node[ee.v], cap, 0);
+	 adder.add_edge(l, node[ee.v], cap, (ee.v-ee.u)*maxSig - ee.d);
       }
       
-      int flow = boost::push_relabel_max_flow(G, src, dst);
-      boost::cycle_canceling(G);
+      //int flow = boost::push_relabel_max_flow(G, src, dst);
+      //boost::cycle_canceling(G);
+      //int cost = boost::find_flow_cost(G);
+      
+      auto c_map = boost::get(boost::edge_capacity, G);
+      auto r_map = boost::get(boost::edge_reverse, G);
+      auto rc_map = boost::get(boost::edge_residual_capacity, G);
+      boost::successive_shortest_path_nonnegative_weights(G, src, dst);
       int cost = boost::find_flow_cost(G);
+      int flow = 0;
+      out_edge_it e, eend;
+      for(boost::tie(e, eend) = boost::out_edges(boost::vertex(src,G), G); e != eend; ++e) {
+          flow += c_map[*e] - rc_map[*e];     
+      }
+      
       //std::cout << "f: " << flow << " c: " << cost << " exp: " << totalIn << std::endl;
       assert(flow == totalIn);
-      std::cout << -cost << std::endl;
+      std::cout << sumC*maxSig-cost << std::endl;
       //std::cout << "hello " << id << std::endl;
    }
 }
