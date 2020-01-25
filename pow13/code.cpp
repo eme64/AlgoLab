@@ -41,7 +41,7 @@ struct Test {
       {  P pp( big,-big); p.push_back(pp); p2i[pp] = -1;  }
 
       int lowk = 0;
-      int highk = n;
+      int highk = std::min(n/2+1,n);
 
       while(lowk+1<highk) {
          int m=(lowk+highk)/2;
@@ -52,8 +52,8 @@ struct Test {
 	 }
       }
       
-      assert(isFeasible(lowk));
-      assert(!isFeasible(lowk+1));
+      //assert(isFeasible(lowk));
+      //assert(!isFeasible(lowk+1));
 
       std::cout << lowk << std::endl;
    }
