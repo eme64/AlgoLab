@@ -46,72 +46,66 @@ struct Test {
       bool interference = false;
 
       for(Face_iterator f = t.finite_faces_begin(); f != t.finite_faces_end(); ++f) {
-	 std::vector<int> index;
 	 for(int i=0; i<3; i++) {
-	    int ind = p2i[f->vertex(i)->point()];
-	    if(ind>=0) {index.push_back(ind);}
-	 }
-	 //std::cout << "face " << index.size() << std::endl;
-         int tcnt = 0;
-	 for(int i=0; i<index.size(); i++) {
-	    for(int j=i+1; j<index.size(); j++) {
-	       int ii = index[i];
-	       int ij = index[j];
-               K::FT d2 = CGAL::squared_distance(p[ii],p[ij]);
-	       if(d2 <= r2) {
-	          // insert for components
-		  boost::add_edge(ii,ij,G);
-		  boost::add_edge(ij,ii,G);
-		  // count
-		  tcnt++;
+	    for(int j=i+1; j<3; j++) {
+	       int ii = p2i[f->vertex(i)->point()];
+	       int ij = p2i[f->vertex(j)->point()];
+	       if(ii>=0 and ij>=0) {
+                  K::FT d2 = CGAL::squared_distance(p[ii],p[ij]);
+	          if(d2 <= r2) {
+	             // insert for components
+	             boost::add_edge(ii,ij,G);
+	             boost::add_edge(ij,ii,G);
+	          }
 	       }
 	    }
 	 }
-	 if(tcnt==3) {interference=true;}
       }
       
       // idea: take graph, visit, try coloring, if conflict -> exit
       // if no conflict: for both color verify with new triangulation, check distances there
       
-      std::vector<int> color(n, 0); // set to 1,2
-
-      //BFS
-      std::vector<int> queue;
-      queue.reserve(n);
-      int qIndex = 0;
-      for(int i=0; i<n; i++) {
-         if(color[i]==0) {
-	    queue.push_back(i);
-            color[i] = 1;
-	    while(qIndex < queue.size()) {
-	       int curr = queue[qIndex++];
-	       // visit children:
-	       out_edge_it oe_beg, oe_end;
-               for (boost::tie(oe_beg, oe_end) = boost::out_edges(curr, G); oe_beg != oe_end; ++oe_beg) {
-                  assert(boost::source(*oe_beg, G) == curr);
-		  int j = boost::target(*oe_beg, G);
-
-		  if(color[j] == 0) {queue.push_back(j);}
-		  if(color[j] == color[curr]) {interference = true;}
-		  color[j] = 3-color[curr];
-	       }
-	    }
-	 }
-      }
-
       if(!interference) {
-         std::vector<P> one;
-         std::vector<P> two;
-	 one.reserve(n);
-	 two.reserve(n);
-	 for(int i=0; i<n;i++) {
-	    if(color[i] == 1) {
-	       one.push_back(p[i]);
-	    } else {
-	       two.push_back(p[i]);
-	    }
-	 }
-	 if(!noContact(one) or !noContact(two)) {interference = true;}
+         std::vector<int> color(n, 0); // set to 1,2
+
+         //BFS
+         std::vector<int> queue;
+         queue.reserve(n);
+         int qIndex = 0;
+         for(int i=0; i<n; i++) {
+            if(color[i]==0) {
+               queue.push_back(i);
+               color[i] = 1;
+               while(qIndex < queue.size()) {
+                  int curr = queue[qIndex++];
+                  // visit children:
+                  out_edge_it oe_beg, oe_end;
+                  for (boost::tie(oe_beg, oe_end) = boost::out_edges(curr, G); oe_beg != oe_end; ++oe_beg) {
+                     assert(boost::source(*oe_beg, G) == curr);
+           	  int j = boost::target(*oe_beg, G);
+
+           	  if(color[j] == 0) {queue.push_back(j);}
+           	  if(color[j] == color[curr]) {interference = true;}
+           	  color[j] = 3-color[curr];
+                  }
+               }
+            }
+         }
+
+         if(!interference) {
+            std::vector<P> one;
+            std::vector<P> two;
+            one.reserve(n);
+            two.reserve(n);
+            for(int i=0; i<n;i++) {
+               if(color[i] == 1) {
+                  one.push_back(p[i]);
+               } else {
+                  two.push_back(p[i]);
+               }
+            }
+            if(!noContact(one) or !noContact(two)) {interference = true;}
+         }
       }
 
       //std::cout << "int " << interference << std::endl;
@@ -157,18 +151,15 @@ struct Test {
       t.insert(pts.begin(), pts.end());
       
       for(Face_iterator f = t.finite_faces_begin(); f != t.finite_faces_end(); ++f) {
-	 std::vector<int> index;
 	 for(int i=0; i<3; i++) {
-	    int ind = p2i[f->vertex(i)->point()];
-	    if(ind>=0) {index.push_back(ind);}
-	 }
-	 for(int i=0; i<index.size(); i++) {
-	    for(int j=i+1; j<index.size(); j++) {
-	       int ii = index[i];
-	       int ij = index[j];
-               K::FT d2 = CGAL::squared_distance(p[ii],p[ij]);
-	       if(d2 <= r2) {
-	          return false;
+	    for(int j=i+1; j<3; j++) {
+	       int ii = p2i[f->vertex(i)->point()];
+	       int ij = p2i[f->vertex(j)->point()];
+	       if(ii>=0 and ij>=0) {
+                  K::FT d2 = CGAL::squared_distance(p[ii],p[ij]);
+	          if(d2 <= r2) {
+	             return false;
+	          }
 	       }
 	    }
 	 }
