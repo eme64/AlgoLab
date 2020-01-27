@@ -16,13 +16,10 @@ typedef CGAL::Quadratic_program_solution<ET> Solution;
 struct Legion {
    long a,b,c,v,det;
    Legion() {}
-   Legion(long a, long b, long c, long v) : a(a), b(b), c(c), v(v) {
-      det = std::sqrt(a*a + b*b);
-   }
 };
 
 struct Test {
-   int xs, ys, n;
+   long xs, ys, n;
    std::vector<Legion> legion;
    Test () {
       std::cin >> xs >> ys >> n;
@@ -30,6 +27,7 @@ struct Test {
       for(int i=0; i<n; i++) {
          Legion l;
 	 std::cin >> l.a >> l.b >> l.c >> l.v;
+         l.det = std::sqrt(l.a*l.a + l.b*l.b);
 	 legion.push_back(l);
       }
       
@@ -62,11 +60,13 @@ struct Test {
       
       for(int i=0; i<n; i++) {
 	 Legion &l = legion[i];
-         const bool isPos = (l.a*xs + l.b*ys + l.c) > 0l;
+	 const long dd = l.a*xs + l.b*ys + l.c;
+         const bool isPos = dd > 0;
 	 //std::cout << "isPos: " << isPos << std::endl;
 	 const long factor = isPos ? 1: -1;
 	 lp.set_a(X, i, -l.a*factor); lp.set_a(Y, i, -l.b*factor);
 	 lp.set_b(i, -(t*l.v*l.det - l.c * factor));
+	 
 	 //long factor = isPos ? 1: -1;
 	 //lp.set_a(X, i, -l.a*factor); lp.set_a(Y, i, -l.b*factor);
 	 //lp.set_b(i, -(t*l.v*l.det - l.c * factor));
@@ -79,7 +79,7 @@ struct Test {
       assert(s.solves_linear_program(lp));
       
       bool ret = !s.is_infeasible();
-      //std::cout << "ret " << ret << std::endl;
+      //std::cout << "ret " << ret << " " << t << std::endl;
       return ret;
    }
 };
@@ -88,7 +88,6 @@ struct Test {
 int main() {
    std::ios_base::sync_with_stdio(false);
    
-   assert(false);
 
    int t;
    std::cin >> t;
