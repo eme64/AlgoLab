@@ -3,8 +3,11 @@
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-typedef CGAL::Delaunay_triangulation_2<K> Triangulation;
+typedef CGAL::Triangulation_vertex_base_with_info_2<int, K> V;
+typedef CGAL::Triangulation_data_structure_2<V> Tds;
+typedef CGAL::Delaunay_triangulation_2<K, Tds> Triangulation;
 typedef Triangulation::Finite_faces_iterator Face_iterator;
 typedef K::Point_2 P;
 
@@ -18,8 +21,7 @@ typedef boost::graph_traits<graph>::out_edge_iterator out_edge_it;
 struct Test {
    int n,m,r;
    K::FT r2;
-   std::vector<P> p;
-   std::map<P, int> p2i;
+   std::vector<std::pair<P,int>> p;
    Test() {
       std::cin >> n >> m >> r;
       r2 = K::FT(r) * K::FT(r);
@@ -29,14 +31,13 @@ struct Test {
 	 int x,y;
 	 std::cin >> x >> y;
 	 P pp(x,y);
-	 p.push_back(pp);
-	 p2i[pp] = i;
+	 p.push_back(std::make_pair(pp,i));
       }
       int big = 1 << 26;
-      { P pp(-big,-big); p.push_back(pp); p2i[pp]=-1;}
-      { P pp( big, big); p.push_back(pp); p2i[pp]=-1;}
-      { P pp(-big, big); p.push_back(pp); p2i[pp]=-1;}
-      { P pp( big,-big); p.push_back(pp); p2i[pp]=-1;}
+      { P pp(-big,-big); p.push_back(std::make_pair(pp,-1)); }
+      { P pp( big, big); p.push_back(std::make_pair(pp,-1)); }
+      { P pp( big,-big); p.push_back(std::make_pair(pp,-1)); }
+      { P pp(-big, big); p.push_back(std::make_pair(pp,-1)); }
 
       Triangulation t;
       t.insert(p.begin(), p.end());
@@ -45,20 +46,14 @@ struct Test {
 
       bool interference = false;
 
-      for(Face_iterator f = t.finite_faces_begin(); f != t.finite_faces_end(); ++f) {
-	 for(int i=0; i<3; i++) {
-	    for(int j=i+1; j<3; j++) {
-	       int ii = p2i[f->vertex(i)->point()];
-	       int ij = p2i[f->vertex(j)->point()];
-	       if(ii>=0 and ij>=0) {
-                  K::FT d2 = CGAL::squared_distance(p[ii],p[ij]);
-	          if(d2 <= r2) {
-	             // insert for components
-	             boost::add_edge(ii,ij,G);
-	             boost::add_edge(ij,ii,G);
-	          }
-	       }
-	    }
+      for(auto e = t.finite_edges_begin(); e!=t.finite_edges_end(); e++) {
+         const auto &v1 = e->first->vertex((e->second + 1) % 3);
+         const auto &v2 = e->first->vertex((e->second + 2) % 3);
+	 const int i1 = v1->info();
+	 const int i2 = v2->info();
+	 if(i1>=0 and i2>=0 and r2 >= CGAL::squared_distance(v1->point(),v2->point())) {
+             boost::add_edge(i1,i2,G);
+             boost::add_edge(i2,i1,G);
 	 }
       }
       
@@ -99,9 +94,9 @@ struct Test {
             two.reserve(n);
             for(int i=0; i<n;i++) {
                if(color[i] == 1) {
-                  one.push_back(p[i]);
+                  one.push_back(p[i].first);
                } else {
-                  two.push_back(p[i]);
+                  two.push_back(p[i].first);
                }
             }
             if(!noContact(one) or !noContact(two)) {interference = true;}
@@ -113,30 +108,33 @@ struct Test {
       std::vector<int> scc_map(n);
       int nscc = boost::strong_components(G,
                    boost::make_iterator_property_map(scc_map.begin(), boost::get(boost::vertex_index, G)));
-
+      
       for(int i=0; i<m; i++) {
          // clues
-	 int x1,y1,x2,y2;
-	 std::cin >> x1 >> y1 >> x2 >> y2;
-	 P pa(x1,y1);
-	 P pb(x2,y2);
-	 K::FT d2 = CGAL::squared_distance(pa,pb);
+         int x1,y1,x2,y2;
+         std::cin >> x1 >> y1 >> x2 >> y2;
+         P pa(x1,y1);
+         P pb(x2,y2);
+         K::FT d2 = CGAL::squared_distance(pa,pb);
 
-	 if(interference) {
-	    std::cout << "n"; // network bad
-	 } else if(d2 <= r2) {
+         if(interference) {
+            std::cout << "n"; // network bad
+         } else if(d2 <= r2) {
             std::cout << "y"; // direct
-	 } else {
-	    int ia = p2i[t.nearest_vertex(pa)->point()];
-	    int ib = p2i[t.nearest_vertex(pb)->point()];
-	    if(scc_map[ia] == scc_map[ib]
-	       && CGAL::squared_distance(p[ia],pa) <= r2
-	       && CGAL::squared_distance(p[ib],pb) <= r2) {
+         } else {
+            const auto &va = t.nearest_vertex(pa);
+            const auto &vb = t.nearest_vertex(pb);
+	    int ia = va->info();
+	    int ib = vb->info();
+	    assert(ia>=0 and ib>=0);
+            if(scc_map[ia] == scc_map[ib]
+               && CGAL::squared_distance(va->point(),pa) <= r2
+               && CGAL::squared_distance(vb->point(),pb) <= r2) {
                std::cout << "y";
-	    } else {
+            } else {
                std::cout << "n";
-	    }
-	 }
+            }
+         }
       }
       std::cout << std::endl;
    }
@@ -150,18 +148,12 @@ struct Test {
       { P pp( big,-big); pts.push_back(pp);}
       t.insert(pts.begin(), pts.end());
       
-      for(Face_iterator f = t.finite_faces_begin(); f != t.finite_faces_end(); ++f) {
-	 for(int i=0; i<3; i++) {
-	    for(int j=i+1; j<3; j++) {
-	       int ii = p2i[f->vertex(i)->point()];
-	       int ij = p2i[f->vertex(j)->point()];
-	       if(ii>=0 and ij>=0) {
-                  K::FT d2 = CGAL::squared_distance(p[ii],p[ij]);
-	          if(d2 <= r2) {
-	             return false;
-	          }
-	       }
-	    }
+      for(auto e = t.finite_edges_begin(); e!=t.finite_edges_end(); e++) {
+         const auto &v1 = e->first->vertex((e->second + 1) % 3);
+         const auto &v2 = e->first->vertex((e->second + 2) % 3);
+	 
+	 if(r2 >= CGAL::squared_distance(v1->point(),v2->point())) {
+	    return false;
 	 }
       }
      
