@@ -18,6 +18,14 @@ struct Legion {
    Legion() {}
 };
 
+template <typename T>
+long myfloor(T v) {
+   long tmp = CGAL::to_double(v);
+   while(T(tmp) < v) {tmp++;}
+   while(T(tmp) > v) {tmp--;}
+   return tmp;
+}
+
 struct Test {
    long xs, ys, n;
    std::vector<Legion> legion;
@@ -31,24 +39,38 @@ struct Test {
 	 legion.push_back(l);
       }
       
-      long lowd = 0;
-      long highd = 1;
-
-      while(isFeasible(highd)) {lowd = highd; highd = highd*2;}
-      while(lowd+1<highd) {
-	 //std::cout << " - " << lowd << " " << highd << std::endl;
-         long m = (lowd + highd)/2;
-	 if(isFeasible(m)) {
-	    lowd = m;
-	 } else {
-            highd = m;
-	 }
-      }
+      Program lp (CGAL::SMALLER, false, 0, false, 0);
+      const int X = 0;
+      const int Y = 1;
+      const int T = 2;
       
-      if(not isFeasible(lowd)) {std::cout << "lowd too high" << std::endl;}
-      if(isFeasible(lowd+1)) {std::cout << "lowd too low" << std::endl;}
-  
-      std::cout << lowd << std::endl;
+      for(int i=0; i<n; i++) {
+	 Legion &l = legion[i];
+	 const long dd = l.a*xs + l.b*ys + l.c;
+         const bool isPos = dd > 0;
+	 //std::cout << "isPos: " << isPos << std::endl;
+	 const long factor = isPos ? 1: -1;
+	 lp.set_a(X, i, -l.a*factor);
+	 lp.set_a(Y, i, -l.b*factor);
+	 lp.set_a(T, i, l.v*l.det);
+	 lp.set_b(i, l.c * factor);
+	 
+	 //long factor = isPos ? 1: -1;
+	 //lp.set_a(X, i, -l.a*factor); lp.set_a(Y, i, -l.b*factor);
+	 //lp.set_b(i, -(t*l.v*l.det - l.c * factor));
+      }
+      lp.set_c(X, 0);
+      lp.set_c(Y, 0);
+      lp.set_c(T, -1);
+      lp.set_c0(0);
+
+      Solution s = CGAL::solve_linear_program(lp, ET());
+      assert(s.solves_linear_program(lp));
+      assert(!s.is_infeasible());
+      
+      CGAL::Quotient<ET> res = s.objective_value();
+      
+      std::cout << myfloor(-res) << std::endl;
    }
 
    bool isFeasible(const long t) {
